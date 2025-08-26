@@ -51,9 +51,13 @@ export const TEAM_DATA = [
         name: "Hilmy Baihaqi",
         code: "IMI",
         major: "Telecommunication Engineering",
-        profilePic: ProfilePlaceholder,
+        profilePic: require("../assets/team/hilmy.png"),
         quote: "Make it work, make it right, make it fast.",
-        socials: { instagram: "#", linkedin: "#", github: "#" },
+        socials: {
+          instagram: "https://www.instagram.com/hilmybaihaaqi_/",
+          linkedin: "https://www.linkedin.com/in/hilmy-baihaqi",
+          github: "https://github.com/hilmybaihaqii",
+        },
       },
       {
         id: "5",
@@ -166,9 +170,15 @@ export const TEAM_DATA = [
         name: "Rivanda Abdillah",
         code: "RVN",
         major: "Telecommunication Engineering",
-        profilePic: ProfilePlaceholder,
-        quote: "Simplicity is the ultimate sophistication.",
-        socials: { instagram: "#", linkedin: "#", github: "#" },
+        profilePic: require("../assets/team/rivanda.jpg"),
+        quote: "if you're not brave enough, no one will back you up",
+        socials: {
+          instagram:
+            "https://www.instagram.com/rivanabdil?igsh=MTZ0Z29ubDRkZmtqYg==",
+          linkedin:
+            "https://www.linkedin.com/in/rivanda-abdillah-06559b371?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+          github: "https://github.com/rivanda30",
+        },
       },
     ],
   },

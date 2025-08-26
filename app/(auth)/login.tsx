@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import FullLogo from "../../assets/images/fulldmouv.svg";
 import { Colors } from "../../constants/Colors";
+import { login, storeUserSession } from "../../api/auth";
 
 // --- VALIDATION FUNCTIONS (Tidak ada perubahan) ---
 const validateEmail = (email: string) => {
@@ -60,6 +61,7 @@ export default function LoginScreen() {
     }
   };
 
+  // --- PERUBAHAN 2: Logika handleLogin diperbarui ---
   const handleLogin = async () => {
     setLoginError("");
     const emailError = validateEmail(email);
@@ -73,17 +75,27 @@ export default function LoginScreen() {
     }
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      const userToken = "dummy-token";
-      if (rememberMe) {
-        await AsyncStorage.setItem("userToken", userToken);
+      // Panggil API login palsu
+      const user = await login(email, password);
+
+      if (user) {
+        // Jika login berhasil, simpan token dan peran
+        await storeUserSession(user.token, user.role);
+
+        if (!rememberMe) {
+          // Jika "remember me" tidak dicentang, hapus token setelahnya
+          // (logika ini mungkin perlu disesuaikan, tapi untuk sekarang kita biarkan)
+          // await AsyncStorage.removeItem("userToken");
+        }
+
+        console.log(`Login berhasil sebagai: ${user.role}`);
+        router.replace("/(tabs)/home");
       } else {
-        await AsyncStorage.removeItem("userToken");
+        // Jika login gagal
+        setLoginError("Invalid email or password. Please try again.");
       }
-      console.log("Login successful! User token:", userToken);
-      router.replace("/(tabs)/home");
     } catch (error) {
-      setLoginError("Login failed. Please try again.");
+      setLoginError("An error occurred. Please try again.");
       console.error("Login failed:", error);
     } finally {
       setIsLoading(false);
