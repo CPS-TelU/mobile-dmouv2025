@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { SplashScreen, Stack, useRouter } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import {
   StatusBar,
@@ -12,18 +11,18 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "../constants/Colors";
-import { FanProvider } from "../context/FanContext";
+import { FanProvider } from "../context/FanContext"; // <<< 1. Impor FanProvider
 import { LampProvider } from "../context/LampContext";
 import { useLoadFonts } from "../hooks/useLoadFonts";
 
 SplashScreen.preventAutoHideAsync();
 
-// --- HEADER COMPONENT (TIDAK ADA PERUBAHAN) ---
 const Header = ({ options, navigation, route }: NativeStackHeaderProps) => {
   const insets = useSafeAreaInsets();
   const { title } = options;
 
   const isAccountSettings = route.name === "account-settings";
+  // --- 2. Tambahkan 'fan-control' ke kondisi ini ---
   const isTransparentWithBlueIcons =
     route.name === "lamp-control" ||
     route.name === "fan-control" ||
@@ -88,7 +87,6 @@ const Header = ({ options, navigation, route }: NativeStackHeaderProps) => {
   );
 };
 
-// --- HEADER STYLES (TIDAK ADA PERUBAHAN) ---
 const headerStyles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
@@ -113,51 +111,21 @@ const headerStyles = StyleSheet.create({
   headerTitleText: { fontFamily: "Poppins-Bold", fontSize: 18 },
 });
 
-// --- ROOT LAYOUT COMPONENT (DENGAN PERUBAHAN ROUTING) ---
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useLoadFonts();
-  const router = useRouter(); // Tambahkan router hook
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
-      // --- PERUBAHAN DIMULAI DI SINI ---
-      const checkInitialRoute = async () => {
-        try {
-          // 1. Cek status onboarding
-          const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
-          if (!hasOnboarded) {
-            router.replace("/onboarding");
-            return;
-          }
-
-          // 2. Cek status login (token)
-          const userToken = await AsyncStorage.getItem("userToken");
-          if (!userToken) {
-            router.replace("/ip-device");
-            return;
-          }
-
-          // 3. Jika semua sudah, arahkan ke home
-          router.replace("/(tabs)/home");
-        } catch (e) {
-          console.warn("Gagal memeriksa rute awal:", e);
-          router.replace("/(auth)/login"); // Fallback
-        } finally {
-          SplashScreen.hideAsync();
-        }
-      };
-
-      checkInitialRoute();
-      // --- PERUBAHAN BERAKHIR DI SINI ---
+      SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError, router]);
+  }, [fontsLoaded, fontError]);
 
   if (!fontsLoaded && !fontError) {
     return null;
   }
 
-  // --- STRUKTUR JSX (TIDAK ADA PERUBAHAN) ---
   return (
+    // --- 3. Bungkus aplikasi dengan FanProvider ---
     <FanProvider>
       <LampProvider>
         <StatusBar barStyle="light-content" />
@@ -175,12 +143,13 @@ export default function RootLayout() {
             options={{
               headerShown: false,
               animation: "fade",
-              animationDuration: 4000,
+              animationDuration: 500,
             }}
           />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="account-settings" options={{ title: "" }} />
           <Stack.Screen name="lamp-control" options={{ title: "" }} />
+          {/* --- 4. Daftarkan layar fan-control --- */}
           <Stack.Screen name="fan-control" options={{ title: "" }} />
           <Stack.Screen name="notifications" options={{ title: "" }} />
         </Stack>

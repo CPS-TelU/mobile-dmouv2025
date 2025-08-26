@@ -4,13 +4,14 @@ import {
   Linking,
   Modal,
   Pressable,
-  SafeAreaView,
+  // SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle, Path, Rect, SvgProps } from "react-native-svg";
 // Pastikan path import ini benar sesuai dengan struktur folder proyek Anda
 import { TEAM_DATA } from "../../constants/team-data";
@@ -140,7 +141,10 @@ export default function TeamsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
+    <SafeAreaView
+      style={styles.safeAreaContainer}
+      edges={["top", "left", "right"]}
+    >
       <View style={styles.header}>
         <View style={styles.headerTitleContainer}>
           <Text style={styles.headerTitle}>RESEARCH DIVISION 2023</Text>
@@ -349,8 +353,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   memberProfilePic: {
-    width: 120,
-    height: 120,
+    width: 108,
+    height: 108,
     borderRadius: 100,
     borderWidth: 3,
     borderColor: Colors.secondary,

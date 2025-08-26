@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 25,
     paddingTop: 20,
-    paddingBottom: 80,
+    paddingBottom: 60,
   },
   dragger: {
     width: 50,

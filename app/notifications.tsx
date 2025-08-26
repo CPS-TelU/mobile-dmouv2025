@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   LayoutAnimation,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../constants/Colors";
 
@@ -48,7 +47,7 @@ const userName = "TimRisetCPS";
 
 // --- KOMPONEN UTAMA ---
 export default function NotificationsScreen() {
-  const insets = useSafeAreaInsets();
+  // const insets = useSafeAreaInsets();
   const [activityLogs, setActivityLogs] = useState<LogEntry[]>([]);
   const [currentDate, setCurrentDate] = useState("");
 
@@ -103,10 +102,8 @@ export default function NotificationsScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView
-        style={[
-          styles.container,
-          { paddingTop: insets.top + (Platform.OS === "ios" ? 10 : 20) },
-        ]}
+        style={styles.container}
+        edges={["top", "left", "right"]} // Hanya aktifkan safe area untuk atas, kiri, dan kanan
       >
         <View style={styles.headerFixed}>
           <Text style={styles.title}>Activity Log</Text>
@@ -175,7 +172,7 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    // paddingBottom: 20,
   },
   itemContainer: {
     backgroundColor: Colors.primary,

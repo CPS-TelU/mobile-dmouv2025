@@ -9,7 +9,7 @@ import {
   Modal,
   Platform,
   Pressable,
-  SafeAreaView,
+  // SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -17,6 +17,7 @@ import {
   UIManager,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../../constants/Colors";
 
@@ -440,7 +441,7 @@ export default function SettingsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <SwipeListView
           style={{ flex: 1 }}
