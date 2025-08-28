@@ -1,14 +1,13 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
   Modal,
-  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Alert,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
 
 type Props = {
@@ -116,21 +115,23 @@ export const ChangePasswordModal: React.FC<Props> = ({
       visible={visible}
       onRequestClose={handleCloseModal}
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Change Password</Text>
+      <View className="flex-1 justify-center items-center bg-black/60">
+        <View className="bg-white rounded-2xl p-6 w-[90%] items-center shadow-lg shadow-black/25">
+          <Text className="font-poppins-bold text-2xl mb-6 text-primary">
+            Change Password
+          </Text>
 
           {/* Current Password Input */}
-          <View style={styles.inputContainer}>
+          <View className="w-full mb-4">
             <View
-              style={[
-                styles.inputGroup,
-                focusedInput === "currentPassword" && styles.inputFocused,
-                !!errors.currentPassword && styles.inputError,
-              ]}
+              className={`w-full flex-row items-center border rounded-xl bg-white ${
+                focusedInput === "currentPassword"
+                  ? "border-primary border-[1.5px]"
+                  : "border-border"
+              } ${!!errors.currentPassword ? "border-redDot" : ""}`}
             >
               <TextInput
-                style={styles.input}
+                className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
                 placeholder="Current Password"
                 placeholderTextColor={Colors.textLight}
                 secureTextEntry={!isCurrentPasswordVisible}
@@ -144,7 +145,7 @@ export const ChangePasswordModal: React.FC<Props> = ({
               />
               <TouchableOpacity
                 onPress={() => setCurrentPasswordVisible(!isCurrentPasswordVisible)}
-                style={styles.eyeIcon}
+                className="p-2.5"
               >
                 <Ionicons
                   name={isCurrentPasswordVisible ? "eye-off" : "eye"}
@@ -154,21 +155,23 @@ export const ChangePasswordModal: React.FC<Props> = ({
               </TouchableOpacity>
             </View>
             {errors.currentPassword ? (
-              <Text style={styles.errorText}>{errors.currentPassword}</Text>
+              <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                {errors.currentPassword}
+              </Text>
             ) : null}
           </View>
 
           {/* New Password Input */}
-          <View style={styles.inputContainer}>
+          <View className="w-full mb-4">
             <View
-              style={[
-                styles.inputGroup,
-                focusedInput === "newPassword" && styles.inputFocused,
-                !!errors.newPassword && styles.inputError,
-              ]}
+              className={`w-full flex-row items-center border rounded-xl bg-white ${
+                focusedInput === "newPassword"
+                  ? "border-primary border-[1.5px]"
+                  : "border-border"
+              } ${!!errors.newPassword ? "border-redDot" : ""}`}
             >
               <TextInput
-                style={styles.input}
+                className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
                 placeholder="New Password (min. 8 characters)"
                 placeholderTextColor={Colors.textLight}
                 secureTextEntry={!isNewPasswordVisible}
@@ -182,7 +185,7 @@ export const ChangePasswordModal: React.FC<Props> = ({
               />
               <TouchableOpacity
                 onPress={() => setNewPasswordVisible(!isNewPasswordVisible)}
-                style={styles.eyeIcon}
+                className="p-2.5"
               >
                 <Ionicons
                   name={isNewPasswordVisible ? "eye-off" : "eye"}
@@ -192,21 +195,23 @@ export const ChangePasswordModal: React.FC<Props> = ({
               </TouchableOpacity>
             </View>
             {errors.newPassword ? (
-              <Text style={styles.errorText}>{errors.newPassword}</Text>
+              <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                {errors.newPassword}
+              </Text>
             ) : null}
           </View>
 
           {/* Confirm New Password Input */}
-          <View style={styles.inputContainer}>
+          <View className="w-full mb-4">
             <View
-              style={[
-                styles.inputGroup,
-                focusedInput === "confirmPassword" && styles.inputFocused,
-                !!errors.confirmPassword && styles.inputError,
-              ]}
+              className={`w-full flex-row items-center border rounded-xl bg-white ${
+                focusedInput === "confirmPassword"
+                  ? "border-primary border-[1.5px]"
+                  : "border-border"
+              } ${!!errors.confirmPassword ? "border-redDot" : ""}`}
             >
               <TextInput
-                style={styles.input}
+                className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
                 placeholder="Confirm New Password"
                 placeholderTextColor={Colors.textLight}
                 secureTextEntry={!isConfirmPasswordVisible}
@@ -222,7 +227,7 @@ export const ChangePasswordModal: React.FC<Props> = ({
                 onPress={() =>
                   setConfirmPasswordVisible(!isConfirmPasswordVisible)
                 }
-                style={styles.eyeIcon}
+                className="p-2.5"
               >
                 <Ionicons
                   name={isConfirmPasswordVisible ? "eye-off" : "eye"}
@@ -232,20 +237,29 @@ export const ChangePasswordModal: React.FC<Props> = ({
               </TouchableOpacity>
             </View>
             {errors.confirmPassword ? (
-              <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+              <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                {errors.confirmPassword}
+              </Text>
             ) : null}
           </View>
 
-          {/* Tombol-tombol Aksi (Horizontal) */}
-          <View style={styles.buttonContainer}>
+          {/* Tombol Aksi */}
+          <View className="flex-row justify-between w-full mt-4">
             <TouchableOpacity
-              style={styles.cancelButton}
+              className="flex-1 bg-border py-4 rounded-2xl items-center mr-1.5"
               onPress={handleCloseModal}
             >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <Text className="text-text text-base font-poppins-semibold">
+                Cancel
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-              <Text style={styles.saveButtonText}>Save</Text>
+            <TouchableOpacity
+              className="flex-1 bg-primary py-4 rounded-2xl items-center ml-1.5"
+              onPress={handleSave}
+            >
+              <Text className="text-white text-base font-poppins-semibold">
+                Save
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -253,99 +267,3 @@ export const ChangePasswordModal: React.FC<Props> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-  },
-  modalContent: {
-    backgroundColor: Colors.white,
-    borderRadius: 20,
-    padding: 25,
-    width: "90%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 22,
-    marginBottom: 25,
-    color: Colors.primary,
-  },
-  inputContainer: {
-    width: "100%",
-    marginBottom: 15,
-  },
-  inputGroup: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: Colors.white,
-  },
-  inputFocused: {
-    borderColor: Colors.primary,
-    borderWidth: 1.5,
-  },
-  inputError: {
-    borderColor: Colors.redDot,
-  },
-  errorText: {
-    color: Colors.redDot,
-    fontFamily: "Roboto-Regular",
-    fontSize: 12,
-    marginTop: 5,
-    paddingLeft: 4,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    color: Colors.text,
-  },
-  eyeIcon: {
-    padding: 10,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 15,
-  },
-  saveButton: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-    paddingVertical: 15,
-    borderRadius: 15,
-    alignItems: "center",
-    marginLeft: 5,
-  },
-  saveButtonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: "Poppins-SemiBold",
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: Colors.border,
-    paddingVertical: 15,
-    borderRadius: 15,
-    alignItems: "center",
-    marginRight: 5,
-  },
-  cancelButtonText: {
-    color: Colors.text,
-    fontSize: 16,
-    fontFamily: "Poppins-SemiBold",
-  },
-});

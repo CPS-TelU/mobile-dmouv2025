@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CustomTabBar from "../../components/navigation/CustomTabBar";
@@ -24,15 +24,15 @@ export default function TabLayout() {
             const currentRouteName = state.routes[state.index]?.name;
             const isHome = currentRouteName === "home";
 
-            // Ikon akan putih di Home, dan biru di halaman lainnya
             const iconColor = isHome ? Colors.white : Colors.primary;
 
             return (
               <View
-                style={[styles.headerContainer, { paddingTop: insets.top }]}
+                className="absolute top-0 left-0 right-0 z-10 flex-row items-center justify-between bg-transparent px-5 pb-2.5 h-[110px]"
+                style={{ paddingTop: insets.top }}
               >
-                {/* --- PERUBAHAN 1: Logo dipindahkan ke sini --- */}
-                <View style={styles.leftContainer}>
+                {/* Left Container */}
+                <View className="flex-1 items-start translate-y-1">
                   {isHome ? (
                     <TouchableOpacity
                       onPress={() => navigation.navigate("home")}
@@ -52,19 +52,20 @@ export default function TabLayout() {
                   )}
                 </View>
 
-                {/* --- PERUBAHAN 2: Bagian tengah sekarang kosong di Home --- */}
-                <View style={styles.centerContainer}>
+                {/* Center Container */}
+                <View className="flex-[2] items-center justify-center">
                   {!isHome && options.title && (
                     <Text
-                      style={[styles.headerTitleText, { color: iconColor }]}
+                      className="font-poppins-bold text-lg"
+                      style={{ color: iconColor }}
                     >
                       {options.title}
                     </Text>
                   )}
                 </View>
 
-                {/* Bagian Kanan: Tidak ada perubahan */}
-                <View style={styles.rightContainer}>
+                {/* Right Container */}
+                <View className="flex-1 flex-row items-center justify-end translate-y-0.5">
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("notifications" as never)
@@ -77,7 +78,7 @@ export default function TabLayout() {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={{ marginLeft: 16 }}
+                    className="ml-4"
                     onPress={() =>
                       navigation.navigate("account-settings" as never)
                     }
@@ -102,41 +103,3 @@ export default function TabLayout() {
     </LampProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "transparent",
-    zIndex: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    height: 110,
-  },
-  leftContainer: {
-    flex: 1,
-    alignItems: "flex-start",
-    transform: [{ translateY: 3 }],
-  },
-  centerContainer: {
-    flex: 2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  rightContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    transform: [{ translateY: 1 }],
-  },
-  headerTitleText: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 18,
-  },
-});

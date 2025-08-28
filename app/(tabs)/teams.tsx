@@ -4,7 +4,6 @@ import {
   Linking,
   Modal,
   Pressable,
-  // SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,19 +12,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle, Path, Rect, SvgProps } from "react-native-svg";
-// Pastikan path import ini benar sesuai dengan struktur folder proyek Anda
 import { TEAM_DATA } from "../../constants/team-data";
-// Saya asumsikan file Colors Anda juga ada di constants
 import { Colors } from "../../constants/Colors";
 
-// --- DEFINISI TIPE DATA (TYPE DEFINITIONS) ---
+// --- TYPE DEFINITIONS ---
 type Member = {
   id: string;
   name: string;
   code: string;
   major: string;
   profilePic: React.FC<SvgProps> | number;
-  quote: string; // Menambahkan tipe untuk quote
+  quote: string;
   socials: {
     instagram: string;
     linkedin: string;
@@ -33,7 +30,7 @@ type Member = {
   };
 };
 
-// --- KOMPONEN IKON MEDIA SOSIAL ---
+// --- SOCIAL MEDIA ICONS ---
 const InstagramIcon = (props: SvgProps) => (
   <Svg
     width={28}
@@ -86,38 +83,63 @@ const GithubIcon = (props: SvgProps) => (
   </Svg>
 );
 
-// --- KARTU ANGGOTA TIM ---
-type TeamMemberCardProps = {
-  code: string;
-  name: string;
-  major: string;
-  profilePicSource: React.FC<SvgProps> | number;
-};
+// --- TEAM MEMBER CARD ---
+// The comment tail style is complex and best kept as a StyleSheet object
+const commentTailStyle = StyleSheet.create({
+  tail: {
+    width: 0,
+    height: 0,
+    backgroundColor: "transparent",
+    borderStyle: "solid",
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderTopWidth: 10,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: Colors.white,
+    position: "absolute",
+    bottom: -10,
+    alignSelf: "center",
+  },
+});
 
 const TeamMemberCard = ({
   code,
   name,
   major,
   profilePicSource,
-}: TeamMemberCardProps) => {
+}: {
+  code: string;
+  name: string;
+  major: string;
+  profilePicSource: React.FC<SvgProps> | number;
+}) => {
   const ProfilePic = profilePicSource;
   return (
-    <View style={styles.memberCard}>
-      <View style={styles.memberInfoBox}>
-        <Text style={styles.memberCode}>{code}</Text>
-        <Text style={styles.memberName} numberOfLines={1}>
+    <View className="items-center mb-6">
+      <View className="bg-white rounded-xl py-2.5 px-1 w-[105%] shadow-md shadow-black/10 mb-2.5 relative">
+        <Text className="font-poppins-bold text-base text-text text-center">
+          {code}
+        </Text>
+        <Text
+          className="font-poppins-semibold text-xs text-primary text-center mt-0.5"
+          numberOfLines={1}
+        >
           {name}
         </Text>
-        <Text style={styles.memberMajor} numberOfLines={1}>
+        <Text
+          className="font-poppins-regular text-[9px] text-textLight text-center"
+          numberOfLines={1}
+        >
           {major}
         </Text>
-        <View style={styles.commentTail} />
+        <View style={commentTailStyle.tail} />
       </View>
-      <View style={styles.memberProfilePic}>
+      <View className="w-[108px] h-[108px] rounded-full border-2 border-secondary bg-white justify-center items-center overflow-hidden shadow-lg shadow-black/15">
         {typeof ProfilePic === "number" ? (
           <Image
             source={ProfilePic}
-            style={styles.profileImage}
+            className="w-full h-full"
             resizeMode="cover"
           />
         ) : (
@@ -128,7 +150,7 @@ const TeamMemberCard = ({
   );
 };
 
-// --- KOMPONEN UTAMA HALAMAN TIM ---
+// --- MAIN TEAMS SCREEN COMPONENT ---
 export default function TeamsScreen() {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
@@ -142,25 +164,38 @@ export default function TeamsScreen() {
 
   return (
     <SafeAreaView
-      style={styles.safeAreaContainer}
+      className="flex-1 bg-background"
       edges={["top", "left", "right"]}
     >
-      <View style={styles.header}>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>RESEARCH DIVISION 2023</Text>
-          <Text style={styles.headerSubtitle}>OUR TEAM</Text>
+      <View className="items-center justify-center pt-16 pb-4 bg-background border-b border-border">
+        <View className="items-center">
+          <Text className="font-poppins-regular text-base text-text">
+            RESEARCH DIVISION 2023
+          </Text>
+          <Text
+            className="font-roboto-medium text-2xl text-text tracking-wider"
+            style={{
+              textShadowColor: "rgba(0, 0, 0, 0.2)",
+              textShadowOffset: { width: 1, height: 2 },
+              textShadowRadius: 4,
+            }}
+          >
+            OUR TEAM
+          </Text>
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 90 }}>
         {TEAM_DATA.map((group, index) => (
-          <View key={index} style={styles.teamSection}>
-            <Text style={styles.sectionTitle}>{group.role}</Text>
-            <View style={styles.membersContainer}>
+          <View key={index} className="bg-secondary rounded-xl p-5 mb-5">
+            <Text className="font-roboto-semibold-italic text-lg text-primary mb-5 text-center">
+              {group.role}
+            </Text>
+            <View className="flex-row flex-wrap justify-around gap-3">
               {group.members.map((member) => (
                 <TouchableOpacity
                   key={member.id}
-                  style={styles.memberCardTouchable}
+                  className="w-[48%]"
                   onPress={() => handleMemberPress(member)}
                 >
                   <TeamMemberCard
@@ -176,7 +211,7 @@ export default function TeamsScreen() {
         ))}
       </ScrollView>
 
-      {/* --- MODAL DETAIL ANGGOTA --- */}
+      {/* Member Detail Modal */}
       {selectedMember && (
         <Modal
           animationType="slide"
@@ -184,14 +219,17 @@ export default function TeamsScreen() {
           visible={!!selectedMember}
           onRequestClose={handleCloseModal}
         >
-          <Pressable style={styles.modalBackdrop} onPress={handleCloseModal}>
-            <Pressable style={styles.modalContentContainer}>
-              <View style={styles.modalHeader}>
-                <View style={styles.modalProfilePic}>
+          <Pressable
+            className="flex-1 bg-black/50 justify-end"
+            onPress={handleCloseModal}
+          >
+            <Pressable className="bg-white rounded-t-2xl p-5 pb-20 items-center shadow-lg shadow-black">
+              <View className="-mt-16 items-center mb-4">
+                <View className="w-[125px] h-[125px] rounded-full border border-white bg-background justify-center items-center overflow-hidden shadow-xl shadow-black/30">
                   {typeof selectedMember.profilePic === "number" ? (
                     <Image
                       source={selectedMember.profilePic}
-                      style={styles.profileImage}
+                      className="w-full h-full"
                       resizeMode="cover"
                     />
                   ) : (
@@ -202,18 +240,26 @@ export default function TeamsScreen() {
                   )}
                 </View>
               </View>
-              <Text style={styles.modalName}>{selectedMember.name}</Text>
-              <Text style={styles.modalCode}>{selectedMember.code}</Text>
-              <Text style={styles.modalMajor}>{selectedMember.major}</Text>
+              <Text className="font-poppins-bold text-2xl text-primary text-center">
+                {selectedMember.name}
+              </Text>
+              <Text className="font-roboto-medium text-base text-text text-center mb-1">
+                {selectedMember.code}
+              </Text>
+              <Text className="font-poppins-regular text-sm text-textLight text-center mb-4">
+                {selectedMember.major}
+              </Text>
 
-              <View style={styles.quoteSection}>
-                <Text style={styles.modalQuoteTitle}>Motto</Text>
-                <Text style={styles.modalQuote}>
+              <View className="w-full border-t border-border pt-4 mb-5">
+                <Text className="font-poppins-semibold text-xs text-text text-center mb-1 uppercase tracking-widest">
+                  Motto
+                </Text>
+                <Text className="font-poppins-regular italic text-sm text-textLight text-center px-2.5 leading-5">
                   &quot;{selectedMember.quote}&quot;
                 </Text>
               </View>
 
-              <View style={styles.socialsContainer}>
+              <View className="flex-row justify-center gap-6 w-full pt-4 border-t border-border">
                 <TouchableOpacity
                   onPress={() =>
                     Linking.openURL(selectedMember.socials.instagram)
@@ -241,225 +287,3 @@ export default function TeamsScreen() {
     </SafeAreaView>
   );
 }
-
-// --- STYLESHEET ---
-const styles = StyleSheet.create({
-  safeAreaContainer: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  header: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 60,
-    paddingBottom: 15,
-    backgroundColor: Colors.background,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  headerTitleContainer: {
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 15,
-    color: Colors.text,
-  },
-  headerSubtitle: {
-    fontFamily: "Roboto-Medium",
-    fontSize: 24,
-    color: Colors.text,
-    textShadowColor: "rgba(0, 0, 0, 0.2)",
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 4,
-    letterSpacing: 1,
-  },
-  contentContainer: {
-    padding: 20,
-    paddingBottom: 90,
-  },
-  teamSection: {
-    backgroundColor: Colors.secondary,
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontFamily: "Roboto-SemiBoldItalic",
-    fontSize: 18,
-    color: Colors.primary,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  membersContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    gap: 11,
-  },
-  memberCardTouchable: {
-    width: "48%",
-  },
-  memberCard: {
-    alignItems: "center",
-    marginBottom: 25,
-  },
-  memberInfoBox: {
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    width: "105%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    marginBottom: 10,
-    position: "relative",
-  },
-  commentTail: {
-    width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderTopWidth: 10,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderTopColor: Colors.white,
-    position: "absolute",
-    bottom: -10,
-    alignSelf: "center",
-  },
-  memberCode: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 15,
-    color: Colors.text,
-    textAlign: "center",
-  },
-  memberName: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 12,
-    color: Colors.primary,
-    textAlign: "center",
-    marginTop: 2,
-  },
-  memberMajor: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 9,
-    color: Colors.textLight,
-    textAlign: "center",
-  },
-  memberProfilePic: {
-    width: 108,
-    height: 108,
-    borderRadius: 100,
-    borderWidth: 3,
-    borderColor: Colors.secondary,
-    backgroundColor: Colors.white,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 4,
-  },
-  profileImage: {
-    width: "100%",
-    height: "100%",
-  },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
-  },
-  modalContentContainer: {
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    paddingBottom: 80,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalHeader: {
-    marginTop: -60,
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  modalProfilePic: {
-    width: 125,
-    height: 125,
-    borderRadius: 100,
-    borderWidth: 0.5,
-    borderColor: Colors.white,
-    backgroundColor: Colors.background,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-    elevation: 5,
-  },
-  modalName: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 22,
-    color: Colors.primary,
-    textAlign: "center",
-  },
-  modalCode: {
-    fontFamily: "Roboto-Medium",
-    fontSize: 16,
-    color: Colors.text,
-    textAlign: "center",
-    marginBottom: 4,
-  },
-  modalMajor: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 14,
-    color: Colors.textLight,
-    textAlign: "center",
-    marginBottom: 15, // Mengurangi margin bawah agar lebih dekat ke garis
-  },
-  // --- STYLE BARU UNTUK SEKSI QUOTE ---
-  quoteSection: {
-    width: "100%",
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
-    paddingTop: 15,
-    marginBottom: 20,
-  },
-  modalQuoteTitle: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 12,
-    color: Colors.text,
-    textAlign: "center",
-    marginBottom: 5,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  modalQuote: {
-    fontFamily: "Poppins-Regular",
-    fontStyle: "italic",
-    fontSize: 14,
-    color: Colors.textLight,
-    textAlign: "center",
-    paddingHorizontal: 10,
-    lineHeight: 20,
-  },
-  socialsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 25,
-    width: "100%",
-    paddingTop: 15,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
-  },
-});

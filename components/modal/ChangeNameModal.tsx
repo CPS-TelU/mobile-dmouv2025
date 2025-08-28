@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Modal,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -56,18 +55,25 @@ export const ChangeNameModal: React.FC<Props> = ({
       visible={visible}
       onRequestClose={handleCloseModal}
     >
-      <Pressable style={styles.modalContainer} onPress={handleCloseModal}>
-        <Pressable style={styles.modalContent} onPress={() => {}}>
-          <Text style={styles.modalTitle}>Change Name</Text>
+      <Pressable
+        className="flex-1 justify-center items-center bg-black/60"
+        onPress={handleCloseModal}
+      >
+        <Pressable
+          className="bg-white rounded-2xl p-6 w-[90%] items-center shadow-lg shadow-black/25"
+          onPress={() => {}} // Mencegah modal tertutup saat menekan kontennya
+        >
+          <Text className="font-poppins-bold text-2xl mb-6 text-primary">
+            Change Name
+          </Text>
 
           <View
-            style={[
-              styles.inputGroup,
-              { borderColor: focusedInput ? Colors.primary : Colors.border },
-            ]}
+            className={`w-full flex-row items-center border rounded-xl mb-4 bg-white ${
+              focusedInput ? "border-primary" : "border-border"
+            }`}
           >
             <TextInput
-              style={styles.input}
+              className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
               placeholder="Enter your new name"
               placeholderTextColor={Colors.textLight}
               value={name}
@@ -78,16 +84,23 @@ export const ChangeNameModal: React.FC<Props> = ({
             />
           </View>
 
-          {/* Tombol-tombol Aksi (Horizontal) */}
-          <View style={styles.buttonContainer}>
+          {/* Tombol Aksi */}
+          <View className="flex-row justify-between w-full mt-4">
             <TouchableOpacity
-              style={styles.cancelButton}
+              className="flex-1 bg-border py-4 rounded-2xl items-center mr-1.5"
               onPress={handleCloseModal}
             >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <Text className="text-text text-base font-poppins-semibold">
+                Cancel
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-              <Text style={styles.saveButtonText}>Save</Text>
+            <TouchableOpacity
+              className="flex-1 bg-primary py-4 rounded-2xl items-center ml-1.5"
+              onPress={handleSave}
+            >
+              <Text className="text-white text-base font-poppins-semibold">
+                Save
+              </Text>
             </TouchableOpacity>
           </View>
         </Pressable>
@@ -95,79 +108,3 @@ export const ChangeNameModal: React.FC<Props> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-  },
-  modalContent: {
-    backgroundColor: Colors.white,
-    borderRadius: 20,
-    padding: 25,
-    width: "90%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 22,
-    marginBottom: 25,
-    color: Colors.primary,
-  },
-  inputGroup: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 15,
-    backgroundColor: Colors.white,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    color: Colors.text,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 15,
-  },
-  saveButton: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-    paddingVertical: 15,
-    borderRadius: 15,
-    alignItems: "center",
-    marginLeft: 5,
-  },
-  saveButtonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: "Poppins-SemiBold",
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: Colors.border,
-    paddingVertical: 15,
-    borderRadius: 15,
-    alignItems: "center",
-    marginRight: 5,
-  },
-  cancelButtonText: {
-    color: Colors.text,
-    fontSize: 16,
-    fontFamily: "Poppins-SemiBold",
-  },
-});

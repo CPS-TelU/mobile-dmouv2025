@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -19,14 +18,14 @@ export default function IpDeviceScreen() {
   const [ssid, setSsid] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  // State untuk melacak input mana yang sedang fokus (active)
-  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+  const [focusedInput, setFocusedInput] = useState < string | null > (null);
   const router = useRouter();
   const [errors, setErrors] = useState({
     ipAddress: "",
     ssid: "",
     password: "",
   });
+
   const validateFields = () => {
     const newErrors = { ipAddress: "", ssid: "", password: "" };
     let isValid = true;
@@ -47,40 +46,51 @@ export default function IpDeviceScreen() {
     setErrors(newErrors);
     return isValid;
   };
+
   const handleConnect = () => {
-    // --- PERUBAHAN: Mengganti logika alert dengan fungsi validasi baru ---
     if (!validateFields()) {
-      return; // Hentikan proses jika validasi gagal
+      return;
     }
     console.log("Connecting with:", { ipAddress, ssid, password });
     router.push("/(auth)/login");
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingContainer}
+        className="flex-1 justify-center p-5"
       >
-        <View style={styles.headerContainer}>
-          <FullLogo width={306} height={66} style={styles.logo} />
-          <Text style={styles.title}>Enter your IP Device and SSID</Text>
-          <Text style={styles.subtitle}>
+        <View className="items-center mb-8">
+          <FullLogo width={280} height={60} className="mb-5" />
+          <Text
+            className="font-poppins-medium text-2xl text-primary text-center mt-2"
+            style={{
+              textShadowColor: "rgba(0, 0, 0, 0.4)",
+              textShadowOffset: { width: 1.5, height: 1.5 },
+              textShadowRadius: 2,
+            }}
+          >
+            Enter your IP Device and SSID
+          </Text>
+          <Text className="font-poppins-extralight text-base text-primary text-center mt-2">
             Please provide your device&apos;s IP and Wifi SSID to keep you
             connected
           </Text>
         </View>
 
-        <View style={styles.card}>
-          {/* Input IP Device */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>IP Device</Text>
+        <View className="bg-cardgray rounded-2xl p-6 shadow-lg shadow-black/25">
+          {/* IP Device Input */}
+          <View className="mb-5">
+            <Text className="font-poppins-semibold text-lg text-primary mb-2">
+              IP Device
+            </Text>
             <TextInput
-              style={[
-                styles.input,
-                focusedInput === "ip" && styles.inputFocused,
-                !!errors.ipAddress && styles.inputError,
-              ]}
+              className={`border rounded-xl px-4 py-3 text-base font-roboto-regular text-text bg-white shadow-sm ${
+                focusedInput === "ip"
+                  ? "border-primary border-2"
+                  : "border-border"
+              } ${!!errors.ipAddress ? "border-redDot" : ""}`}
               placeholder="Enter Your IP Device"
               placeholderTextColor={Colors.textLight}
               value={ipAddress}
@@ -90,25 +100,29 @@ export default function IpDeviceScreen() {
               onFocus={() => setFocusedInput("ip")}
               onBlur={() => setFocusedInput(null)}
             />
-            {/* --- BAGIAN BARU: Menampilkan teks error --- */}
             {errors.ipAddress ? (
-              <Text style={styles.errorText}>{errors.ipAddress}</Text>
+              <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                {errors.ipAddress}
+              </Text>
             ) : null}
           </View>
 
-          {/* Input SSID */}
-          <View style={styles.inputContainer}>
-            <View style={styles.labelRow}>
-              <Text style={styles.label}>SSID</Text>
-              <Text style={styles.labelHint}>WI-FI ID</Text>
+          {/* SSID Input */}
+          <View className="mb-5">
+            <View className="flex-row justify-between mb-2">
+              <Text className="font-poppins-semibold text-lg text-primary">
+                SSID
+              </Text>
+              <Text className="font-roboto-regular text-base text-textLight">
+                WI-FI ID
+              </Text>
             </View>
             <TextInput
-              // --- PERUBAHAN: Style dinamis berdasarkan error dan focus ---
-              style={[
-                styles.input,
-                focusedInput === "ssid" && styles.inputFocused,
-                !!errors.ssid && styles.inputError,
-              ]}
+              className={`border rounded-xl px-4 py-3 text-base font-roboto-regular text-text bg-white shadow-sm ${
+                focusedInput === "ssid"
+                  ? "border-primary border-2"
+                  : "border-border"
+              } ${!!errors.ssid ? "border-redDot" : ""}`}
               placeholder="SSID Name"
               placeholderTextColor={Colors.textLight}
               value={ssid}
@@ -117,25 +131,27 @@ export default function IpDeviceScreen() {
               onFocus={() => setFocusedInput("ssid")}
               onBlur={() => setFocusedInput(null)}
             />
-            {/* --- BAGIAN BARU: Menampilkan teks error --- */}
             {errors.ssid ? (
-              <Text style={styles.errorText}>{errors.ssid}</Text>
+              <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                {errors.ssid}
+              </Text>
             ) : null}
           </View>
 
-          {/* Input Password */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
+          {/* Password Input */}
+          <View className="mb-5">
+            <Text className="font-poppins-semibold text-lg text-primary mb-2">
+              Password
+            </Text>
             <View
-              // --- PERUBAHAN: Style dinamis berdasarkan error dan focus ---
-              style={[
-                styles.passwordWrapper,
-                focusedInput === "password" && styles.inputFocused,
-                !!errors.password && styles.inputError,
-              ]}
+              className={`flex-row items-center border rounded-xl bg-white shadow-sm ${
+                focusedInput === "password"
+                  ? "border-primary border-2"
+                  : "border-border"
+              } ${!!errors.password ? "border-redDot" : ""}`}
             >
               <TextInput
-                style={styles.passwordInput}
+                className="flex-1 px-4 py-3 text-base font-roboto-regular text-text"
                 placeholder="Password"
                 placeholderTextColor={Colors.textLight}
                 value={password}
@@ -146,7 +162,7 @@ export default function IpDeviceScreen() {
               />
               <TouchableOpacity
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                style={styles.eyeIconWrapper}
+                className="px-2.5"
               >
                 <Ionicons
                   name={isPasswordVisible ? "eye-off" : "eye"}
@@ -155,156 +171,24 @@ export default function IpDeviceScreen() {
                 />
               </TouchableOpacity>
             </View>
-            {/* --- BAGIAN BARU: Menampilkan teks error --- */}
             {errors.password ? (
-              <Text style={styles.errorText}>{errors.password}</Text>
+              <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                {errors.password}
+              </Text>
             ) : null}
           </View>
 
-          {/* Tombol Connect */}
+          {/* Connect Button */}
           <TouchableOpacity
-            style={styles.connectButton}
+            className="bg-primary py-4 rounded-2xl items-center mt-2.5"
             onPress={handleConnect}
           >
-            <Text style={styles.connectButtonText}>Connect</Text>
+            <Text className="font-poppins-bold text-lg text-white">
+              Connect
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  keyboardAvoidingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  headerContainer: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  logo: {
-    width: 180,
-    height: 60,
-    resizeMode: "contain",
-    marginBottom: 20,
-  },
-  title: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 22,
-    color: Colors.primary,
-    textAlign: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.4)",
-    textShadowOffset: { width: 1.5, height: 1.5 },
-    textShadowRadius: 2,
-  },
-  subtitle: {
-    fontFamily: "Poppins-ExtraLight",
-    fontSize: 16,
-    color: Colors.primary,
-    textAlign: "center",
-    marginTop: 8,
-  },
-  card: {
-    backgroundColor: Colors.cardgray,
-    borderRadius: 20,
-    padding: 25,
-    // --- PERUBAHAN DI SINI ---
-    elevation: 7, // Naikkan untuk Android
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 }, // Bisa sedikit ditambah offset-nya
-    shadowOpacity: 0.25, // Naikkan agar lebih gelap
-    shadowRadius: 3.84, // Kurangi agar lebih tajam
-    // --- AKHIR PERUBAHAN ---
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  labelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  label: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 16,
-    color: Colors.primary,
-  },
-  labelHint: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 14,
-    color: Colors.textLight,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    color: Colors.text,
-    backgroundColor: Colors.white,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  passwordWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 10,
-    backgroundColor: Colors.white,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  passwordInput: {
-    flex: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    color: Colors.text,
-  },
-  eyeIconWrapper: {
-    paddingHorizontal: 10,
-  },
-  connectButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 15,
-    borderRadius: 15,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  connectButtonText: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 18,
-    color: Colors.white,
-  },
-  // --- BAGIAN BARU: Styles untuk error dan focus ---
-  inputFocused: {
-    borderColor: Colors.primary,
-    borderWidth: 1.5, // Sedikit lebih tebal saat fokus
-  },
-  inputError: {
-    borderColor: Colors.redDot, // Warna border merah saat error
-  },
-  errorText: {
-    color: Colors.redDot,
-    fontFamily: "Roboto-Regular",
-    fontSize: 12,
-    marginTop: 5,
-    paddingLeft: 4,
-  },
-});

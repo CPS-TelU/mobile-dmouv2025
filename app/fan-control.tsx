@@ -6,13 +6,12 @@ import {
   LayoutAnimation,
   Platform,
   StatusBar,
-  StyleSheet,
   Text,
   TouchableOpacity,
   UIManager,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context"; // <<< 1. Impor
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { fetchFanStatus, updateFanState } from "../api/api";
 import FanIcon from "../assets/images/fandua.svg";
 import CustomSwitch from "../components/CustomSwitch";
@@ -35,17 +34,24 @@ const StatusItem: React.FC<{
   value: string;
   color: string;
 }> = ({ icon, label, value, color }) => (
-  <View style={styles.statusItem}>
+  <View className="flex-1 items-center">
     <Ionicons name={icon} size={24} color={Colors.primary} />
-    <View style={styles.statusTextContainer}>
-      <Text style={styles.statusLabel}>{label}</Text>
-      <Text style={[styles.statusValue, { color }]}>{value}</Text>
+    <View className="items-center mt-2">
+      <Text className="font-poppins-regular text-sm text-textLight">
+        {label}
+      </Text>
+      <Text
+        className="font-poppins-semibold text-[15px] font-bold mt-1"
+        style={{ color }}
+      >
+        {value}
+      </Text>
     </View>
   </View>
 );
 
 export default function FanControlScreen() {
-  const insets = useSafeAreaInsets(); // <<< 2. Gunakan hook
+  const insets = useSafeAreaInsets();
   const { isAutoMode, setIsAutoMode } = useFan();
   const [fanStatus, setFanStatus] = useState<FanStatus>("off");
   const [personStatus, setPersonStatus] =
@@ -136,47 +142,54 @@ export default function FanControlScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.centered}>
+      <View className="flex-1 justify-center items-center bg-secondary">
         <ActivityIndicator size="large" color={Colors.white} />
-        <Text style={styles.loadingText}>Loading Status...</Text>
+        <Text className="mt-2.5 text-white text-base">Loading Status...</Text>
       </View>
     );
   }
 
   return (
-    // <<< 3. Terapkan paddingTop dinamis di sini
-    <View style={[styles.fullScreenContainer, { paddingTop: insets.top + 60 }]}>
+    <View
+      className="flex-1 bg-secondary"
+      style={{ paddingTop: insets.top + 50 }}
+    >
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
         translucent
       />
-      {/* SafeAreaView dihapus karena padding sudah diatur di View atas */}
-
-      {/* Top Section for Fan */}
-      <View style={styles.topContainer}>
-        <Text style={styles.headerTitle}>Smart Fan</Text>
-        <Text style={styles.headerSubtitle}>Control your smart cooling</Text>
-        <View style={styles.deviceImageContainer}>
+      <View className="items-center justify-start px-5">
+        <Text
+          className="font-poppins-semibold text-3xl font-bold text-white mt-0.5"
+          style={{
+            textShadowColor: "rgba(0, 0, 0, 0.2)",
+            textShadowOffset: { width: 1, height: 2 },
+            textShadowRadius: 3,
+          }}
+        >
+          Smart Fan
+        </Text>
+        <Text className="font-poppins-regular text-[15px] text-textLight mt-0.5">
+          Control your smart cooling
+        </Text>
+        <View className="w-52 h-52 justify-center items-center mt-2.5 mb-12 p-4">
           <FanIcon
-            width="100%"
-            height="100%"
+            width="120%"
+            height="120%"
             fill={isFanOn ? Colors.lampOnColor : Colors.lampOffColor}
           />
         </View>
       </View>
 
-      {/* Control Card */}
-      <View style={styles.controlCard}>
-        <View style={styles.controlCardContent}>
-          <View style={styles.dragger} />
+      <View className="bg-white flex-1 rounded-t-[30px] items-center shadow-lg shadow-black/10 mt-50">
+        <View className="w-full items-center px-6 pt-5 pb-16">
+          <View className="w-[50px] h-[5px] bg-border rounded-full mb-6" />
 
-          {/* Power Button */}
           <TouchableOpacity
-            style={[
-              styles.powerButton,
-              isAutoMode && { backgroundColor: Colors.border },
-            ]}
+            className={`w-24 h-24 rounded-full justify-center items-center bg-secondary shadow-lg shadow-primary/30 mb-2.5 border-2 border-white ${
+              isAutoMode ? "bg-border" : ""
+            }`}
             onPress={handleFanToggle}
             disabled={isAutoMode}
             activeOpacity={0.7}
@@ -188,18 +201,16 @@ export default function FanControlScreen() {
             />
           </TouchableOpacity>
           <Text
-            style={[
-              styles.deviceStatus,
-              { color: isFanOn ? Colors.greenDot : Colors.textLight },
-            ]}
+            className={`font-poppins-semibold text-base font-semibold mb-6 ${
+              isFanOn ? "text-greenDot" : "text-textLight"
+            }`}
           >
             Fan is {isFanOn ? "On" : "Off"}
           </Text>
 
-          <View style={styles.divider} />
+          <View className="w-full h-px bg-border mb-5" />
 
-          {/* Status Container */}
-          <View style={styles.statusContainer}>
+          <View className="flex-row w-full justify-around bg-[#F4F3F3] rounded-2xl p-4 mb-5">
             <StatusItem
               icon="body-outline"
               label="Person Status"
@@ -208,7 +219,7 @@ export default function FanControlScreen() {
                 personStatus === "detected" ? Colors.redDot : Colors.greenDot
               }
             />
-            <View style={styles.statusSeparator} />
+            <View className="w-px bg-border mx-2.5" />
             <StatusItem
               icon="sync-circle-outline"
               label="Fan Status"
@@ -217,11 +228,12 @@ export default function FanControlScreen() {
             />
           </View>
 
-          {/* Automatic Mode Control */}
-          <View style={styles.autoModeContainer}>
+          <View className="flex-row justify-between items-center bg-[#F4F3F3] rounded-2xl p-5 w-full">
             <View>
-              <Text style={styles.autoModeTitle}>Automatic Mode</Text>
-              <Text style={styles.autoModeSubtitle}>
+              <Text className="font-poppins-semibold text-[15px] font-semibold text-text">
+                Automatic Mode
+              </Text>
+              <Text className="font-poppins-regular text-xs text-textLight mt-0.5">
                 Control fan based on detection
               </Text>
             </View>
@@ -235,160 +247,3 @@ export default function FanControlScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  fullScreenContainer: {
-    flex: 1,
-    backgroundColor: Colors.secondary,
-  },
-  // safeArea style tidak lagi digunakan, bisa dihapus
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.secondary,
-  },
-  loadingText: {
-    marginTop: 10,
-    color: Colors.white,
-    fontSize: 16,
-  },
-  topContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  headerTitle: {
-    fontFamily: "Poppins-SemiBold",
-    paddingTop: 20,
-    fontSize: 25,
-    fontWeight: "bold",
-    color: Colors.white,
-    textShadowColor: "rgba(0, 0, 0, 0.2)",
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 3,
-  },
-  headerSubtitle: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 15,
-    color: Colors.textLight,
-    marginTop: 2,
-  },
-  deviceImageContainer: {
-    width: 200,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 50,
-    padding: 15,
-  },
-  controlCard: {
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
-    elevation: 10,
-  },
-  controlCardContent: {
-    width: "100%",
-    alignItems: "center",
-    paddingHorizontal: 25,
-    paddingTop: 20,
-    paddingBottom: 60,
-  },
-  dragger: {
-    width: 50,
-    height: 5,
-    backgroundColor: Colors.border,
-    borderRadius: 3,
-    marginBottom: 25,
-  },
-  powerButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.secondary,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: Colors.white,
-  },
-  deviceStatus: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 25,
-  },
-  divider: {
-    width: "100%",
-    height: 1,
-    backgroundColor: Colors.border,
-    marginBottom: 20,
-  },
-  statusContainer: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-around",
-    backgroundColor: "#F4F3F3",
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 20,
-  },
-  statusItem: {
-    flex: 1,
-    alignItems: "center",
-  },
-  statusTextContainer: {
-    alignItems: "center",
-    marginTop: 8,
-  },
-  statusLabel: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 14,
-    color: Colors.textLight,
-  },
-  statusValue: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 15,
-    fontWeight: "bold",
-    marginTop: 4,
-  },
-  statusSeparator: {
-    width: 1,
-    backgroundColor: Colors.border,
-    marginHorizontal: 10,
-  },
-  autoModeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#F4F3F3",
-    borderRadius: 15,
-    padding: 20,
-    width: "100%",
-  },
-  autoModeTitle: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text,
-  },
-  autoModeSubtitle: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 12,
-    color: Colors.textLight,
-    marginTop: 2,
-  },
-});

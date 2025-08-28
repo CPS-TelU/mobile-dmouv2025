@@ -2,35 +2,33 @@ import { Ionicons } from "@expo/vector-icons";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "../constants/Colors";
-import { FanProvider } from "../context/FanContext"; // <<< 1. Impor FanProvider
+import { FanProvider } from "../context/FanContext";
 import { LampProvider } from "../context/LampContext";
 import { useLoadFonts } from "../hooks/useLoadFonts";
+import "../global.css"; // Pastikan global.css diimpor
 
 SplashScreen.preventAutoHideAsync();
 
+/**
+ * Header kustom yang menggunakan NativeWind untuk styling.
+ */
 const Header = ({ options, navigation, route }: NativeStackHeaderProps) => {
   const insets = useSafeAreaInsets();
   const { title } = options;
 
   const isAccountSettings = route.name === "account-settings";
-  // --- 2. Tambahkan 'fan-control' ke kondisi ini ---
   const isTransparentWithBlueIcons =
     route.name === "lamp-control" ||
     route.name === "fan-control" ||
     route.name === "notifications";
 
-  let iconColor;
-  let backgroundColor;
-  let titleColor;
+  // Logika untuk menentukan warna tetap sama
+  let iconColor: string;
+  let backgroundColor: string;
+  let titleColor: string;
 
   if (isAccountSettings) {
     iconColor = Colors.white;
@@ -48,36 +46,44 @@ const Header = ({ options, navigation, route }: NativeStackHeaderProps) => {
 
   return (
     <View
-      style={[
-        headerStyles.headerContainer,
-        {
-          paddingTop: insets.top,
-          backgroundColor: backgroundColor,
-        },
-      ]}
+      // StyleSheet.headerContainer diubah menjadi className
+      className="flex-row justify-between items-center px-5 pb-2.5 absolute top-0 left-0 right-0 z-10"
+      // Style dinamis tetap dipertahankan
+      style={{
+        paddingTop: insets.top,
+        backgroundColor: backgroundColor,
+      }}
     >
-      <View style={headerStyles.leftContainer}>
+      {/* Kolom Kiri */}
+      <View className="flex-1 items-start">
         {navigation.canGoBack() && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={30} color={iconColor} />
           </TouchableOpacity>
         )}
       </View>
-      <View style={headerStyles.centerContainer}>
+
+      {/* Kolom Tengah */}
+      <View className="flex-[2] items-center justify-center">
         {title && (
-          <Text style={[headerStyles.headerTitleText, { color: titleColor }]}>
+          <Text
+            className="font-poppins-bold text-lg"
+            style={{ color: titleColor }}
+          >
             {title}
           </Text>
         )}
       </View>
-      <View style={headerStyles.rightContainer}>
+
+      {/* Kolom Kanan */}
+      <View className="flex-1 flex-row items-center justify-end">
         <TouchableOpacity
           onPress={() => navigation.navigate("notifications" as never)}
         >
           <Ionicons name="notifications-outline" size={30} color={iconColor} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ marginLeft: 16 }}
+          className="ml-4" // marginLeft: 16 diubah menjadi ml-4
           onPress={() => navigation.navigate("account-settings" as never)}
         >
           <Ionicons name="person-circle-outline" size={30} color={iconColor} />
@@ -87,30 +93,9 @@ const Header = ({ options, navigation, route }: NativeStackHeaderProps) => {
   );
 };
 
-const headerStyles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-  },
-  leftContainer: { flex: 1, alignItems: "flex-start" },
-  centerContainer: { flex: 2, alignItems: "center", justifyContent: "center" },
-  rightContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  headerTitleText: { fontFamily: "Poppins-Bold", fontSize: 18 },
-});
-
+/**
+ * Layout utama aplikasi.
+ */
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useLoadFonts();
 
@@ -125,7 +110,6 @@ export default function RootLayout() {
   }
 
   return (
-    // --- 3. Bungkus aplikasi dengan FanProvider ---
     <FanProvider>
       <LampProvider>
         <StatusBar barStyle="light-content" />
@@ -149,7 +133,6 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="account-settings" options={{ title: "" }} />
           <Stack.Screen name="lamp-control" options={{ title: "" }} />
-          {/* --- 4. Daftarkan layar fan-control --- */}
           <Stack.Screen name="fan-control" options={{ title: "" }} />
           <Stack.Screen name="notifications" options={{ title: "" }} />
         </Stack>

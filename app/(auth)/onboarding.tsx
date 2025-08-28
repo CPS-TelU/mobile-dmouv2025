@@ -6,7 +6,6 @@ import {
   Dimensions,
   FlatList,
   SafeAreaView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -16,22 +15,33 @@ import OnboardingData from "../../constants/OnboardingData";
 
 const { width } = Dimensions.get("window");
 
-// Komponen Item Slide
+// Onboarding Item Component
 const OnboardingItem = ({ item }: { item: (typeof OnboardingData)[0] }) => {
-  const SvgImage = item.image; // SVG diimport sebagai komponen
+  const SvgImage = item.image;
 
   return (
-    <View style={styles.slide}>
-      <SvgImage width={width * 0.5} height={width * 0.5} />
-      <View style={{ marginTop: 30 }}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.subtitle}>{item.subtitle}</Text>
+    <View className="justify-center items-center px-10" style={{ width }}>
+      <SvgImage width={width * 0.6} height={width * 0.6} />
+      <View className="mt-8">
+        <Text
+          className="font-poppins-semibold text-3xl text-text text-center mb-2.5"
+          style={{
+            textShadowColor: "rgba(0, 0, 0, 0.4)",
+            textShadowOffset: { width: 1.5, height: 1.5 },
+            textShadowRadius: 2,
+          }}
+        >
+          {item.title}
+        </Text>
+        <Text className="font-poppins-extralight text-lg text-primary text-center px-5 mb-5">
+          {item.subtitle}
+        </Text>
       </View>
     </View>
   );
 };
 
-// Komponen Paginator
+// Paginator Component
 const Paginator = ({
   data,
   scrollX,
@@ -42,7 +52,7 @@ const Paginator = ({
   const dotPosition = Animated.divide(scrollX, width);
 
   return (
-    <View style={styles.paginatorContainer}>
+    <View className="flex-[2] flex-row justify-center items-center">
       {data.slice(0, 3).map((_, i) => {
         const dotWidth = dotPosition.interpolate({
           inputRange: [i - 1, i, i + 1],
@@ -65,14 +75,12 @@ const Paginator = ({
         return (
           <Animated.View
             key={i.toString()}
-            style={[
-              styles.dot,
-              {
-                width: dotWidth,
-                opacity: dotOpacity,
-                backgroundColor: dotColor,
-              },
-            ]}
+            className="h-2.5 rounded-full mx-2"
+            style={{
+              width: dotWidth,
+              opacity: dotOpacity,
+              backgroundColor: dotColor,
+            }}
           />
         );
       })}
@@ -80,7 +88,7 @@ const Paginator = ({
   );
 };
 
-// Screen Utama
+// Main Screen Component
 export default function OnboardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slidesRef = useRef<FlatList>(null);
@@ -130,14 +138,14 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-white">
       {/* Background Blobs */}
-      <View style={[styles.blob, styles.blob1]} />
-      <View style={[styles.blob, styles.blob2]} />
-      <View style={[styles.blob, styles.blob3]} />
+      <View className="absolute w-[250px] h-[250px] rounded-full bg-blue-200/30 top-[-80px] left-[-100px]" />
+      <View className="absolute w-[250px] h-[250px] rounded-full bg-blue-200/30 top-[30%] right-[-90px]" />
+      <View className="absolute w-[250px] h-[250px] rounded-full bg-blue-200/30 bottom-[-60px] left-[45%]" />
 
-      {/* Konten Utama */}
-      <View style={styles.mainContent}>
+      {/* Main Content */}
+      <View className="flex-1 justify-center items-center">
         <FlatList
           ref={slidesRef}
           data={OnboardingData}
@@ -155,38 +163,47 @@ export default function OnboardingScreen() {
       </View>
 
       {/* Footer */}
-      <View style={styles.footer}>
+      <View className="h-[100px] justify-center px-8 pb-10">
         {currentIndex === OnboardingData.length - 1 ? (
           <TouchableOpacity
-            style={styles.buttonGetStarted}
+            className="bg-primary py-4 rounded-full items-center mx-5 shadow-md shadow-black/25"
             onPress={handleNext}
           >
-            <Text style={styles.buttonTextGetStarted}>
-              {"Let's Get Started"}
+            <Text className="font-poppins-semibold text-base text-white">
+              Let&apos;s Get Started
             </Text>
           </TouchableOpacity>
         ) : (
-          <View style={styles.navigationContainer}>
+          <View className="flex-row justify-between items-center w-full">
             {currentIndex === 0 ? (
               <TouchableOpacity
-                style={styles.skipBackButton}
+                className="bg-primary py-2.5 px-5 rounded-full items-center justify-center min-w-[80px] shadow-md shadow-black/25"
                 onPress={navigateToNextScreen}
               >
-                <Text style={styles.buttonTextSkip}>Skip</Text>
+                <Text className="font-poppins-semibold text-base text-white">
+                  Skip
+                </Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                style={styles.skipBackButton}
+                className="bg-primary py-2.5 px-5 rounded-full items-center justify-center min-w-[80px] shadow-md shadow-black/25"
                 onPress={handleBack}
               >
-                <Text style={styles.buttonTextSkip}>Back</Text>
+                <Text className="font-poppins-semibold text-base text-white">
+                  Back
+                </Text>
               </TouchableOpacity>
             )}
 
             <Paginator data={OnboardingData} scrollX={scrollX} />
 
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-              <Text style={styles.buttonTextNext}>Next</Text>
+            <TouchableOpacity
+              className="bg-primary py-2.5 px-5 rounded-full items-center justify-center min-w-[80px] shadow-md shadow-black/25"
+              onPress={handleNext}
+            >
+              <Text className="font-poppins-semibold text-base text-white">
+                Next
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -194,130 +211,3 @@ export default function OnboardingScreen() {
     </SafeAreaView>
   );
 }
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  blob: {
-    position: "absolute",
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: "rgba(159, 201, 255, 0.3)",
-  },
-  blob1: { top: -80, left: -100 },
-  blob2: { top: "30%", right: -90 },
-  blob3: { bottom: -60, left: "45%" },
-
-  mainContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footer: {
-    height: 100,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-
-  slide: {
-    width,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 40,
-  },
-  title: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 26,
-    color: Colors.text,
-    textAlign: "center",
-    marginBottom: 10,
-    textShadowColor: "rgba(0, 0, 0, 0.4)",
-    textShadowOffset: { width: 1.5, height: 1.5 },
-    textShadowRadius: 2,
-  },
-  subtitle: {
-    fontFamily: "Poppins-ExtraLight",
-    fontSize: 16,
-    color: Colors.primary,
-    textAlign: "center",
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  navigationContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-  },
-  skipBackButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    minWidth: 80,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  nextButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    minWidth: 80,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  paginatorContainer: {
-    flex: 2,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dot: {
-    height: 10,
-    borderRadius: 5,
-    marginHorizontal: 8,
-  },
-  buttonTextSkip: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 16,
-    color: Colors.white,
-  },
-  buttonTextNext: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 16,
-    color: Colors.white,
-  },
-  buttonGetStarted: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    marginHorizontal: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  buttonTextGetStarted: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 16,
-    color: Colors.white,
-  },
-});

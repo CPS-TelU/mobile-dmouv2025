@@ -9,8 +9,6 @@ import {
   Modal,
   Platform,
   Pressable,
-  // SafeAreaView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -50,15 +48,27 @@ const daysOfWeek = [
   "Sunday",
 ];
 
-// --- KOMPONEN FORM TERPISAH UNTUK VALIDASI & UI YANG LEBIH BAIK ---
-// --- KOMPONEN FORM TERPISAH (VERSI SUDAH DIPERBAIKI) ---
+const timeToMinutes = (timeStr: string) => {
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  if (
+    isNaN(hours) ||
+    isNaN(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  )
+    return NaN;
+  return hours * 60 + minutes;
+};
+
+// --- Schedule Form Component ---
 interface ScheduleFormProps {
   selectedDevice: "lamp" | "fan";
   schedulesForDevice: Schedule[];
   onSubmit: (data: Omit<Schedule, "id">) => void;
 }
 
-// 1. Definisikan komponen dengan nama fungsi yang jelas
 const ScheduleFormComponent = ({
   selectedDevice,
   schedulesForDevice,
@@ -73,20 +83,6 @@ const ScheduleFormComponent = ({
   );
 
   const isSubmitDisabled = !selectedDay || !inputOnTime || !inputOffTime;
-
-  const timeToMinutes = (timeStr: string) => {
-    const [hours, minutes] = timeStr.split(":").map(Number);
-    if (
-      isNaN(hours) ||
-      isNaN(minutes) ||
-      hours < 0 ||
-      hours > 23 ||
-      minutes < 0 ||
-      minutes > 59
-    )
-      return NaN;
-    return hours * 60 + minutes;
-  };
 
   const handleTimeInputChange = useCallback(
     (text: string, setter: (value: string) => void) => {
@@ -157,34 +153,35 @@ const ScheduleFormComponent = ({
   };
 
   return (
-    // ... JSX dari form Anda tidak berubah ...
     <>
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>
+      <View className="bg-white rounded-2xl p-5 mb-5 shadow-sm shadow-black/5">
+        <Text className="text-lg font-bold text-text mb-4">
           Set {selectedDevice === "lamp" ? "Lamp" : "Fan"} Schedule
         </Text>
         <TouchableOpacity
-          style={styles.pickerButton}
+          className="flex-row justify-between items-center bg-background rounded-xl p-4"
           onPress={() => {
             setError(null);
             setDayModalVisible(true);
           }}
         >
           <Ionicons name="calendar-outline" size={20} color={Colors.primary} />
-          <Text style={styles.pickerButtonText}>
+          <Text className="flex-1 text-center text-base font-medium text-text">
             {selectedDay || "Select Day"}
           </Text>
           <Ionicons name="chevron-down" size={20} color={Colors.primary} />
         </TouchableOpacity>
         {error && error.field === "day" && (
-          <Text style={styles.errorText}>{error.message}</Text>
+          <Text className="text-redDot text-sm mt-2 ml-2 font-medium">
+            {error.message}
+          </Text>
         )}
-        <View style={styles.timeInputContainer}>
-          <View style={styles.timeInputRow}>
+        <View className="mt-4">
+          <View className="flex-row items-center bg-background rounded-xl px-4 mb-2.5">
             <Ionicons name="time-outline" size={20} color={Colors.textLight} />
-            <Text style={styles.timeLabel}>On Time</Text>
+            <Text className="text-base text-text mx-2.5">On Time</Text>
             <TextInput
-              style={styles.timeInput}
+              className="flex-1 py-4 text-base text-right"
               placeholder="HH:MM"
               keyboardType="numeric"
               maxLength={5}
@@ -194,11 +191,11 @@ const ScheduleFormComponent = ({
               }
             />
           </View>
-          <View style={styles.timeInputRow}>
+          <View className="flex-row items-center bg-background rounded-xl px-4">
             <Ionicons name="time-outline" size={20} color={Colors.textLight} />
-            <Text style={styles.timeLabel}>Off Time</Text>
+            <Text className="text-base text-text mx-2.5">Off Time</Text>
             <TextInput
-              style={styles.timeInput}
+              className="flex-1 py-4 text-base text-right"
               placeholder="HH:MM"
               keyboardType="numeric"
               maxLength={5}
@@ -210,20 +207,23 @@ const ScheduleFormComponent = ({
           </View>
         </View>
         {error && error.field === "time" && (
-          <Text style={styles.errorText}>{error.message}</Text>
+          <Text className="text-redDot text-sm mt-2 ml-2 font-medium">
+            {error.message}
+          </Text>
         )}
         <TouchableOpacity
-          style={[
-            styles.submitButton,
-            isSubmitDisabled && styles.submitButtonDisabled,
-          ]}
+          className={`rounded-2xl py-4 items-center mt-4 ${
+            isSubmitDisabled ? "bg-gray-300" : "bg-primary"
+          }`}
           onPress={handleLocalSubmit}
           disabled={isSubmitDisabled}
         >
-          <Text style={styles.submitButtonText}>Save Schedule</Text>
+          <Text className="text-base font-bold text-white">Save Schedule</Text>
         </TouchableOpacity>
         {error && error.field === "submit" && (
-          <Text style={styles.submitErrorText}>{error.message}</Text>
+          <Text className="text-redDot text-sm text-center mt-4 font-medium">
+            {error.message}
+          </Text>
         )}
       </View>
 
@@ -234,22 +234,24 @@ const ScheduleFormComponent = ({
         onRequestClose={() => setDayModalVisible(false)}
       >
         <Pressable
-          style={styles.modalOverlay}
+          className="flex-1 justify-center bg-black/50 p-5"
           onPress={() => setDayModalVisible(false)}
         >
-          <Pressable style={styles.modalContent}>
-            <View style={styles.modalIndicator} />
-            <Text style={styles.modalTitle}>Select a Day</Text>
+          <Pressable className="bg-white rounded-2xl p-5">
+            <View className="w-12 h-1.5 bg-gray-300 rounded-full self-center mb-4" />
+            <Text className="text-lg font-bold mb-4 text-center">
+              Select a Day
+            </Text>
             {daysOfWeek.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={styles.dayItem}
+                className="py-4 border-b border-gray-200"
                 onPress={() => {
                   setSelectedDay(item);
                   setDayModalVisible(false);
                 }}
               >
-                <Text style={styles.dayItemText}>{item}</Text>
+                <Text className="text-center text-base text-text">{item}</Text>
               </TouchableOpacity>
             ))}
           </Pressable>
@@ -259,10 +261,9 @@ const ScheduleFormComponent = ({
   );
 };
 
-// 2. Bungkus komponen bernama tersebut dengan React.memo
 const ScheduleForm = React.memo(ScheduleFormComponent);
 
-// --- KOMPONEN UTAMA ---
+// --- MAIN COMPONENT ---
 export default function SettingsScreen() {
   const router = useRouter();
   const [selectedDevice, setSelectedDevice] = useState<Device>("lamp");
@@ -270,6 +271,34 @@ export default function SettingsScreen() {
   const [profileImage] = useState<string | null>(null);
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
   const fadeAnim = useState(new Animated.Value(0))[0];
+
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
+  const [editOnTime, setEditOnTime] = useState("");
+  const [editOffTime, setEditOffTime] = useState("");
+  const [editError, setEditError] = useState<string | null>(null);
+
+  const handleEditTimeChange = useCallback(
+    (text: string, setter: (value: string) => void) => {
+      setEditError(null);
+      const nums = text.replace(/[^0-9]/g, "");
+      if (nums.length > 4) return;
+      let formattedText = nums;
+      if (nums.length > 2) {
+        formattedText = `${nums.slice(0, 2)}:${nums.slice(2)}`;
+      }
+      setter(formattedText);
+    },
+    []
+  );
+
+  const handleStartEdit = useCallback((schedule: Schedule) => {
+    setEditingSchedule(schedule);
+    setEditOnTime(schedule.onTime);
+    setEditOffTime(schedule.offTime);
+    setEditError(null);
+    setIsEditModalVisible(true);
+  }, []);
 
   const handleDeviceChange = useCallback((device: Device) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -329,10 +358,87 @@ export default function SettingsScreen() {
     [selectedDevice, showSuccessMessage]
   );
 
-  const renderHiddenItem = (data: any, rowMap: any) => (
-    <View style={styles.rowBack}>
+  const handleUpdateSchedule = useCallback(() => {
+    if (!editingSchedule) return;
+
+    setEditError(null);
+
+    const newStartTime = timeToMinutes(editOnTime);
+    const newEndTime = timeToMinutes(editOffTime);
+
+    if (isNaN(newStartTime) || isNaN(newEndTime)) {
+      return setEditError("Invalid time format. Please use HH:MM.");
+    }
+    if (newEndTime <= newStartTime) {
+      return setEditError("Off time must be after on time.");
+    }
+
+    const schedulesForDay = schedules[selectedDevice].filter(
+      (s) => s.day === editingSchedule.day && s.id !== editingSchedule.id
+    );
+
+    for (const schedule of schedulesForDay) {
+      const existingStartTime = timeToMinutes(schedule.onTime);
+      const existingEndTime = timeToMinutes(schedule.offTime);
+      if (newStartTime < existingEndTime && newEndTime > existingStartTime) {
+        return setEditError("This schedule overlaps with an existing one.");
+      }
+    }
+
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setSchedules((prev) => ({
+      ...prev,
+      [selectedDevice]: prev[selectedDevice].map((s) =>
+        s.id === editingSchedule.id
+          ? { ...s, onTime: editOnTime, offTime: editOffTime }
+          : s
+      ),
+    }));
+
+    setIsEditModalVisible(false);
+    setEditingSchedule(null);
+    showSuccessMessage("Schedule updated successfully");
+  }, [
+    editingSchedule,
+    editOnTime,
+    editOffTime,
+    schedules,
+    selectedDevice,
+    showSuccessMessage,
+  ]);
+
+  const renderScheduleItem = ({ item }: { item: Schedule }) => (
+    <View className="bg-white rounded-2xl p-4 mb-2.5 flex-row items-center justify-between shadow-sm shadow-black/5 border border-gray-100">
+      <View className="flex-1">
+        <Text className="text-base font-bold text-primary mb-2">
+          {item.day}
+        </Text>
+        <View className="flex-row justify-between">
+          <View className="flex-row items-center">
+            <View className="w-2 h-2 rounded-full bg-greenDot mr-2" />
+            <Text className="text-sm text-textLight mr-1">On</Text>
+            <Text className="text-sm font-semibold text-text">{item.onTime}</Text>
+          </View>
+          <View className="flex-row items-center">
+            <View className="w-2 h-2 rounded-full bg-redDot mr-2" />
+            <Text className="text-sm text-textLight mr-1">Off</Text>
+            <Text className="text-sm font-semibold text-text">{item.offTime}</Text>
+          </View>
+        </View>
+      </View>
       <TouchableOpacity
-        style={[styles.backRightBtn, styles.backRightBtnRight]}
+        onPress={() => handleStartEdit(item)}
+        className="pl-4 p-1"
+      >
+        <Ionicons name="create-outline" size={24} color={Colors.primary} />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderHiddenItem = (data: any, rowMap: any) => (
+    <View className="items-center bg-redDot flex-1 flex-row justify-end mb-2.5 rounded-2xl">
+      <TouchableOpacity
+        className="items-center justify-center absolute top-0 bottom-0 w-[90px] right-0"
         onPress={() => {
           rowMap[data.item.id].closeRow();
           handleDelete(data.item.id);
@@ -343,76 +449,56 @@ export default function SettingsScreen() {
     </View>
   );
 
-  const renderScheduleItem = ({ item }: { item: Schedule }) => (
-    <View style={styles.scheduleCard}>
-      <View style={styles.scheduleInfo}>
-        <Text style={styles.scheduleDay}>{item.day}</Text>
-        <View style={styles.scheduleTimeContainer}>
-          <View style={styles.scheduleTimeRow}>
-            <View style={[styles.dot, { backgroundColor: Colors.greenDot }]} />
-            <Text style={styles.scheduleTimeLabel}>On</Text>
-            <Text style={styles.scheduleTimeValue}>{item.onTime}</Text>
-          </View>
-          <View style={styles.scheduleTimeRow}>
-            <View style={[styles.dot, { backgroundColor: Colors.redDot }]} />
-            <Text style={styles.scheduleTimeLabel}>Off</Text>
-            <Text style={styles.scheduleTimeValue}>{item.offTime}</Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-
   const renderListHeader = useCallback(
     () => (
       <>
-        <View style={styles.profileContainer}>
+        <View className="items-center my-5">
           <Image
             source={
               profileImage
                 ? { uri: profileImage }
                 : require("../../assets/images/pp.svg")
             }
-            style={styles.profileImage}
+            className="w-28 h-28 rounded-full border-4 border-white"
           />
-          <Text style={styles.profileName}>TimRisetCPS</Text>
-          <Text style={styles.profileEmail}>TimRisetCPS@gmail.com</Text>
+          <Text className="text-xl font-bold text-text mt-3">
+            TimRisetCPS
+          </Text>
+          <Text className="text-base text-textLight">TimRisetCPS@gmail.com</Text>
           <TouchableOpacity
-            style={styles.editProfileButton}
+            className="mt-4 bg-white/80 py-2 px-5 rounded-full"
             onPress={() => router.push("/account-settings")}
           >
-            <Text style={styles.editProfileText}>Edit Profile</Text>
+            <Text className="text-sm text-primary font-semibold">
+              Edit Profile
+            </Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.modeControlContainer}>
+        <View className="flex-row bg-white/70 rounded-full p-1 mb-5">
           <TouchableOpacity
-            style={[
-              styles.modeButton,
-              selectedDevice === "lamp" && styles.modeButtonActive,
-            ]}
+            className={`flex-1 py-2.5 rounded-full ${
+              selectedDevice === "lamp" ? "bg-white shadow" : ""
+            }`}
             onPress={() => handleDeviceChange("lamp")}
           >
             <Text
-              style={[
-                styles.modeButtonText,
-                selectedDevice === "lamp" && styles.modeButtonTextActive,
-              ]}
+              className={`text-center text-base font-semibold ${
+                selectedDevice === "lamp" ? "text-primary" : "text-textLight"
+              }`}
             >
               Lamp
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[
-              styles.modeButton,
-              selectedDevice === "fan" && styles.modeButtonActive,
-            ]}
+            className={`flex-1 py-2.5 rounded-full ${
+              selectedDevice === "fan" ? "bg-white shadow" : ""
+            }`}
             onPress={() => handleDeviceChange("fan")}
           >
             <Text
-              style={[
-                styles.modeButtonText,
-                selectedDevice === "fan" && styles.modeButtonTextActive,
-              ]}
+              className={`text-center text-base font-semibold ${
+                selectedDevice === "fan" ? "text-primary" : "text-textLight"
+              }`}
             >
               Fan
             </Text>
@@ -425,8 +511,8 @@ export default function SettingsScreen() {
           onSubmit={handleSubmitNewSchedule}
         />
 
-        <View style={styles.savedScheduleHeader}>
-          <Text style={styles.cardTitle}>Saved Schedules</Text>
+        <View className="mt-2.5">
+          <Text className="text-lg font-bold text-text">Saved Schedules</Text>
         </View>
       </>
     ),
@@ -441,8 +527,11 @@ export default function SettingsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-      <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+    <SafeAreaView
+      className="flex-1 bg-secondary"
+      edges={["top", "left", "right", "bottom"]}
+    >
+      <Pressable className="flex-1" onPress={Keyboard.dismiss}>
         <SwipeListView
           style={{ flex: 1 }}
           data={schedules[selectedDevice]}
@@ -452,27 +541,113 @@ export default function SettingsScreen() {
           disableRightSwipe
           keyExtractor={(item) => item.id}
           ListHeaderComponent={renderListHeader}
-          contentContainerStyle={styles.listContentContainer}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 150, paddingTop: 50 }}
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
         />
       </Pressable>
+
+      {/* Edit Schedule Modal */}
+      {editingSchedule && (
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isEditModalVisible}
+          onRequestClose={() => setIsEditModalVisible(false)}
+        >
+          <Pressable
+            className="flex-1 justify-center bg-black/50 p-5"
+            onPress={() => setIsEditModalVisible(false)}
+          >
+            <Pressable className="bg-white rounded-2xl p-6 w-full self-center shadow-lg">
+              <Text className="text-lg font-bold text-center mb-2">
+                Edit Schedule
+              </Text>
+              <Text className="text-base text-center text-textLight mb-5">
+                Editing for{" "}
+                <Text className="font-bold">{editingSchedule.day}</Text>
+              </Text>
+
+              <View>
+                <View className="flex-row items-center bg-background rounded-xl px-4 mb-2.5">
+                  <Ionicons
+                    name="time-outline"
+                    size={20}
+                    color={Colors.textLight}
+                  />
+                  <Text className="text-base text-text mx-2.5">On Time</Text>
+                  <TextInput
+                    className="flex-1 py-4 text-base text-right"
+                    placeholder="HH:MM"
+                    keyboardType="numeric"
+                    maxLength={5}
+                    value={editOnTime}
+                    onChangeText={(text) =>
+                      handleEditTimeChange(text, setEditOnTime)
+                    }
+                  />
+                </View>
+                <View className="flex-row items-center bg-background rounded-xl px-4">
+                  <Ionicons
+                    name="time-outline"
+                    size={20}
+                    color={Colors.textLight}
+                  />
+                  <Text className="text-base text-text mx-2.5">Off Time</Text>
+                  <TextInput
+                    className="flex-1 py-4 text-base text-right"
+                    placeholder="HH:MM"
+                    keyboardType="numeric"
+                    maxLength={5}
+                    value={editOffTime}
+                    onChangeText={(text) =>
+                      handleEditTimeChange(text, setEditOffTime)
+                    }
+                  />
+                </View>
+              </View>
+
+              {editError && (
+                <Text className="text-redDot text-sm text-center mt-4 font-medium">
+                  {editError}
+                </Text>
+              )}
+
+              <TouchableOpacity
+                className="bg-primary rounded-2xl py-4 items-center mt-5"
+                onPress={handleUpdateSchedule}
+              >
+                <Text className="text-base font-bold text-white">
+                  Save Changes
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-transparent border border-textLight rounded-2xl py-4 items-center mt-2.5"
+                onPress={() => setIsEditModalVisible(false)}
+              >
+                <Text className="text-base font-bold text-textLight">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
+
       {deleteMessage && (
         <Animated.View
-          style={[
-            styles.toast,
-            {
-              opacity: fadeAnim,
-              transform: [
-                {
-                  translateY: fadeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [50, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
+          className="absolute bottom-32 self-center bg-black/80 py-3 px-5 rounded-full flex-row items-center z-50"
+          style={{
+            opacity: fadeAnim,
+            transform: [
+              {
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [50, 0],
+                }),
+              },
+            ],
+          }}
         >
           <Ionicons
             name="checkmark-circle-outline"
@@ -480,254 +655,11 @@ export default function SettingsScreen() {
             color={Colors.white}
             style={{ marginRight: 10 }}
           />
-          <Text style={styles.toastText}>{deleteMessage}</Text>
+          <Text className="text-white text-sm font-semibold">
+            {deleteMessage}
+          </Text>
         </Animated.View>
       )}
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.secondary },
-  listContentContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-    paddingTop: 50,
-  },
-  profileContainer: { alignItems: "center", marginVertical: 20 },
-  profileImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    borderWidth: 4,
-    borderColor: Colors.white,
-  },
-  profileName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: Colors.text,
-    marginTop: 12,
-    textShadowColor: "rgba(0, 0, 0, 0.1)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  profileEmail: { fontSize: 15, color: Colors.textLight },
-  editProfileButton: {
-    marginTop: 15,
-    backgroundColor: "rgba(255,255,255,0.8)",
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-  },
-  editProfileText: { fontSize: 13, color: Colors.primary, fontWeight: "600" },
-  modeControlContainer: {
-    flexDirection: "row",
-    backgroundColor: "rgba(255,255,255,0.7)",
-    borderRadius: 25,
-    padding: 5,
-    marginBottom: 20,
-  },
-  modeButton: { flex: 1, paddingVertical: 10, borderRadius: 20 },
-  modeButtonActive: {
-    backgroundColor: Colors.white,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  modeButtonText: {
-    textAlign: "center",
-    fontSize: 16,
-    color: Colors.textLight,
-    fontWeight: "600",
-  },
-  modeButtonTextActive: { color: Colors.primary },
-  card: {
-    backgroundColor: Colors.white,
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.text,
-    marginBottom: 15,
-    textShadowColor: "rgba(0, 0, 0, 0.05)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 1,
-  },
-  savedScheduleHeader: { marginTop: 10 },
-  pickerButton: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: Colors.background,
-    borderRadius: 10,
-    padding: 15,
-  },
-  pickerButtonText: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 16,
-    color: Colors.text,
-    fontWeight: "500",
-  },
-  timeInputContainer: { marginTop: 15 },
-  timeInputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.background,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 10,
-  },
-  timeLabel: { fontSize: 16, color: Colors.text, marginHorizontal: 10 },
-  timeInput: { flex: 1, paddingVertical: 15, fontSize: 16, textAlign: "right" },
-  submitButton: {
-    backgroundColor: Colors.primary,
-    borderRadius: 15,
-    paddingVertical: 15,
-    alignItems: "center",
-    marginTop: 15,
-  },
-  submitButtonDisabled: { backgroundColor: "#CCCCCC" },
-  submitButtonText: { fontSize: 16, fontWeight: "bold", color: Colors.white },
-  scheduleCard: {
-    backgroundColor: Colors.white,
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: "#f0f0f0",
-  },
-  scheduleInfo: { flex: 1 },
-  scheduleDay: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.primary,
-    marginBottom: 8,
-  },
-  scheduleTimeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  scheduleTimeRow: { flexDirection: "row", alignItems: "center" },
-  dot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },
-  scheduleTimeLabel: { fontSize: 14, color: Colors.textLight, marginRight: 5 },
-  scheduleTimeValue: { fontSize: 14, fontWeight: "600", color: Colors.text },
-
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    paddingBottom: 30,
-    width: "100%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 20,
-  },
-  modalIndicator: {
-    width: 50,
-    height: 5,
-    backgroundColor: "#ccc",
-    borderRadius: 3,
-    alignSelf: "center",
-    marginBottom: 15,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  dayItem: {
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  dayItemText: { textAlign: "center", fontSize: 16, color: Colors.text },
-
-  errorText: {
-    color: Colors.redDot,
-    fontSize: 13,
-    marginTop: 8,
-    marginLeft: 10,
-    fontWeight: "500",
-  },
-  submitErrorText: {
-    color: Colors.redDot,
-    fontSize: 14,
-    textAlign: "center",
-    marginTop: 15,
-    fontWeight: "500",
-  },
-
-  rowBack: {
-    alignItems: "center",
-    backgroundColor: Colors.redDot,
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingLeft: 15,
-    marginBottom: 10,
-    borderRadius: 15,
-  },
-  backRightBtn: {
-    alignItems: "center",
-    bottom: 0,
-    justifyContent: "center",
-    position: "absolute",
-    top: 0,
-    width: 90,
-  },
-  backRightBtnRight: {
-    backgroundColor: Colors.redDot,
-    right: 0,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
-    flexDirection: "row",
-    paddingHorizontal: 15,
-    gap: 5,
-    alignItems: "center",
-  },
-  toast: {
-    position: "absolute",
-    bottom: 120,
-    alignSelf: "center",
-    backgroundColor: "rgba(0,0,0,0.8)",
-    paddingVertical: 12,
-    paddingHorizontal: 22,
-    borderRadius: 25,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 10,
-    zIndex: 999,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  toastText: { color: "#fff", fontSize: 14, fontWeight: "600" },
-});

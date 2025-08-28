@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  StyleSheet,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -19,14 +19,14 @@ type UserRole = "superuser" | "user";
 const AddUserScreen: React.FC = () => {
   const router = useRouter();
 
-  // State untuk setiap input field
+  // State for each input field
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [role, setRole] = useState<UserRole>("user");
 
-  // State untuk pesan error
+  // State for error messages
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -34,7 +34,7 @@ const AddUserScreen: React.FC = () => {
     confirmPassword: "",
   });
 
-  // State untuk visibilitas password
+  // State for password visibility
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isConfirmPasswordVisible, setConfirmPasswordVisible] =
     useState<boolean>(false);
@@ -114,337 +114,238 @@ const AddUserScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingContainer}
+        className="flex-1"
       >
-        <View style={styles.contentWrapper}>
-          <Text style={styles.pageTitle}>Create New User</Text>
-          <Text style={styles.pageSubtitle}>
-            Enter the details below to create a new account
-          </Text>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View className="px-5 py-5">
+            <Text className="font-poppins-bold text-2xl text-text mb-1 text-center">
+              Create New User
+            </Text>
+            <Text className="font-roboto-regular text-[15px] text-textLight text-center mb-8">
+              Enter the details below to create a new account
+            </Text>
 
-          <View style={styles.formContainer}>
-            {/* Name Input */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Full Name</Text>
-              <View
-                style={[
-                  styles.inputGroup,
-                  focusedInput === "name" && styles.inputFocused,
-                  !!errors.name && styles.inputError,
-                ]}
-              >
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter full name"
-                  placeholderTextColor={Colors.textLight}
-                  value={name}
-                  onChangeText={(text) => {
-                    setName(text);
-                    clearErrorsOnChange("name");
-                  }}
-                  onFocus={() => setFocusedInput("name")}
-                  onBlur={() => setFocusedInput(null)}
-                />
-              </View>
-              {errors.name ? (
-                <Text style={styles.errorText}>{errors.name}</Text>
-              ) : null}
-            </View>
-
-            {/* Email Input */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email Address</Text>
-              <View
-                style={[
-                  styles.inputGroup,
-                  focusedInput === "email" && styles.inputFocused,
-                  !!errors.email && styles.inputError,
-                ]}
-              >
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter email address"
-                  placeholderTextColor={Colors.textLight}
-                  value={email}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    clearErrorsOnChange("email");
-                  }}
-                  onFocus={() => setFocusedInput("email")}
-                  onBlur={() => setFocusedInput(null)}
-                />
-              </View>
-              {errors.email ? (
-                <Text style={styles.errorText}>{errors.email}</Text>
-              ) : null}
-            </View>
-
-            {/* Password Input */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
-              <View
-                style={[
-                  styles.inputGroup,
-                  focusedInput === "password" && styles.inputFocused,
-                  !!errors.password && styles.inputError,
-                ]}
-              >
-                <TextInput
-                  style={styles.input}
-                  placeholder="Min. 8 characters"
-                  placeholderTextColor={Colors.textLight}
-                  secureTextEntry={!isPasswordVisible}
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    clearErrorsOnChange("password");
-                  }}
-                  onFocus={() => setFocusedInput("password")}
-                  onBlur={() => setFocusedInput(null)}
-                />
-                <TouchableOpacity
-                  onPress={() => setPasswordVisible(!isPasswordVisible)}
-                  style={styles.eyeIcon}
+            <View className="bg-white rounded-2xl p-5 shadow-lg shadow-black/10">
+              {/* Name Input */}
+              <View className="w-full mb-5">
+                <Text className="font-poppins-semibold text-base text-text mb-2">
+                  Full Name
+                </Text>
+                <View
+                  className={`flex-row items-center border rounded-xl bg-gray-50 ${
+                    focusedInput === "name"
+                      ? "border-primary border-[1.5px] bg-white"
+                      : "border-border"
+                  } ${!!errors.name ? "border-redDot" : ""}`}
                 >
-                  <Ionicons
-                    name={isPasswordVisible ? "eye-off" : "eye"}
-                    size={24}
-                    color={Colors.primary}
+                  <TextInput
+                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    placeholder="Enter full name"
+                    placeholderTextColor={Colors.textLight}
+                    value={name}
+                    onChangeText={(text) => {
+                      setName(text);
+                      clearErrorsOnChange("name");
+                    }}
+                    onFocus={() => setFocusedInput("name")}
+                    onBlur={() => setFocusedInput(null)}
                   />
-                </TouchableOpacity>
+                </View>
+                {errors.name ? (
+                  <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                    {errors.name}
+                  </Text>
+                ) : null}
               </View>
-              {errors.password ? (
-                <Text style={styles.errorText}>{errors.password}</Text>
-              ) : null}
-            </View>
 
-            {/* Confirm Password Input */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Confirm Password</Text>
-              <View
-                style={[
-                  styles.inputGroup,
-                  focusedInput === "confirmPassword" && styles.inputFocused,
-                  !!errors.confirmPassword && styles.inputError,
-                ]}
-              >
-                <TextInput
-                  style={styles.input}
-                  placeholder="Re-enter password"
-                  placeholderTextColor={Colors.textLight}
-                  secureTextEntry={!isConfirmPasswordVisible}
-                  value={confirmPassword}
-                  onChangeText={(text) => {
-                    setConfirmPassword(text);
-                    clearErrorsOnChange("confirmPassword");
-                  }}
-                  onFocus={() => setFocusedInput("confirmPassword")}
-                  onBlur={() => setFocusedInput(null)}
-                />
-                <TouchableOpacity
-                  onPress={() =>
-                    setConfirmPasswordVisible(!isConfirmPasswordVisible)
-                  }
-                  style={styles.eyeIcon}
+              {/* Email Input */}
+              <View className="w-full mb-5">
+                <Text className="font-poppins-semibold text-base text-text mb-2">
+                  Email Address
+                </Text>
+                <View
+                  className={`flex-row items-center border rounded-xl bg-gray-50 ${
+                    focusedInput === "email"
+                      ? "border-primary border-[1.5px] bg-white"
+                      : "border-border"
+                  } ${!!errors.email ? "border-redDot" : ""}`}
                 >
-                  <Ionicons
-                    name={isConfirmPasswordVisible ? "eye-off" : "eye"}
-                    size={24}
-                    color={Colors.primary}
+                  <TextInput
+                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    placeholder="Enter email address"
+                    placeholderTextColor={Colors.textLight}
+                    value={email}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      clearErrorsOnChange("email");
+                    }}
+                    onFocus={() => setFocusedInput("email")}
+                    onBlur={() => setFocusedInput(null)}
                   />
-                </TouchableOpacity>
+                </View>
+                {errors.email ? (
+                  <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                    {errors.email}
+                  </Text>
+                ) : null}
               </View>
-              {errors.confirmPassword ? (
-                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-              ) : null}
-            </View>
 
-            {/* Role Selection */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Select Role</Text>
-              <View style={styles.roleOptions}>
-                <TouchableOpacity
-                  style={[
-                    styles.roleButton,
-                    role === "user" && styles.roleButtonActive,
-                  ]}
-                  onPress={() => setRole("user")}
+              {/* Password Input */}
+              <View className="w-full mb-5">
+                <Text className="font-poppins-semibold text-base text-text mb-2">
+                  Password
+                </Text>
+                <View
+                  className={`flex-row items-center border rounded-xl bg-gray-50 ${
+                    focusedInput === "password"
+                      ? "border-primary border-[1.5px] bg-white"
+                      : "border-border"
+                  } ${!!errors.password ? "border-redDot" : ""}`}
                 >
-                  <Text
-                    style={[
-                      styles.roleButtonText,
-                      role === "user" && styles.roleButtonTextActive,
-                    ]}
+                  <TextInput
+                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    placeholder="Min. 8 characters"
+                    placeholderTextColor={Colors.textLight}
+                    secureTextEntry={!isPasswordVisible}
+                    value={password}
+                    onChangeText={(text) => {
+                      setPassword(text);
+                      clearErrorsOnChange("password");
+                    }}
+                    onFocus={() => setFocusedInput("password")}
+                    onBlur={() => setFocusedInput(null)}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setPasswordVisible(!isPasswordVisible)}
+                    className="p-2.5"
                   >
-                    User
+                    <Ionicons
+                      name={isPasswordVisible ? "eye-off" : "eye"}
+                      size={24}
+                      color={Colors.primary}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {errors.password ? (
+                  <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                    {errors.password}
                   </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.roleButton,
-                    role === "superuser" && styles.roleButtonActive,
-                  ]}
-                  onPress={() => setRole("superuser")}
+                ) : null}
+              </View>
+
+              {/* Confirm Password Input */}
+              <View className="w-full mb-5">
+                <Text className="font-poppins-semibold text-base text-text mb-2">
+                  Confirm Password
+                </Text>
+                <View
+                  className={`flex-row items-center border rounded-xl bg-gray-50 ${
+                    focusedInput === "confirmPassword"
+                      ? "border-primary border-[1.5px] bg-white"
+                      : "border-border"
+                  } ${!!errors.confirmPassword ? "border-redDot" : ""}`}
                 >
-                  <Text
-                    style={[
-                      styles.roleButtonText,
-                      role === "superuser" && styles.roleButtonTextActive,
-                    ]}
+                  <TextInput
+                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    placeholder="Re-enter password"
+                    placeholderTextColor={Colors.textLight}
+                    secureTextEntry={!isConfirmPasswordVisible}
+                    value={confirmPassword}
+                    onChangeText={(text) => {
+                      setConfirmPassword(text);
+                      clearErrorsOnChange("confirmPassword");
+                    }}
+                    onFocus={() => setFocusedInput("confirmPassword")}
+                    onBlur={() => setFocusedInput(null)}
+                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      setConfirmPasswordVisible(!isConfirmPasswordVisible)
+                    }
+                    className="p-2.5"
                   >
-                    Superuser
+                    <Ionicons
+                      name={isConfirmPasswordVisible ? "eye-off" : "eye"}
+                      size={24}
+                      color={Colors.primary}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {errors.confirmPassword ? (
+                  <Text className="text-redDot font-roboto-regular text-xs mt-1 pl-1">
+                    {errors.confirmPassword}
                   </Text>
-                </TouchableOpacity>
+                ) : null}
+              </View>
+
+              {/* Role Selection */}
+              <View className="w-full mb-2">
+                <Text className="font-poppins-semibold text-base text-text mb-2">
+                  Select Role
+                </Text>
+                <View className="flex-row w-full">
+                  <TouchableOpacity
+                    className={`flex-1 py-3 border-[1.5px] rounded-xl items-center mx-1 ${
+                      role === "user"
+                        ? "border-primary bg-primary/10"
+                        : "border-border"
+                    }`}
+                    onPress={() => setRole("user")}
+                  >
+                    <Text
+                      className={`font-poppins-medium text-sm ${
+                        role === "user" ? "text-primary" : "text-textLight"
+                      }`}
+                    >
+                      User
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className={`flex-1 py-3 border-[1.5px] rounded-xl items-center mx-1 ${
+                      role === "superuser"
+                        ? "border-primary bg-primary/10"
+                        : "border-border"
+                    }`}
+                    onPress={() => setRole("superuser")}
+                  >
+                    <Text
+                      className={`font-poppins-medium text-sm ${
+                        role === "superuser"
+                          ? "text-primary"
+                          : "text-textLight"
+                      }`}
+                    >
+                      Superuser
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
 
-        <View style={styles.buttonWrapper}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Add Account</Text>
+        <View className="p-5 bg-background">
+          <TouchableOpacity
+            className="bg-primary py-4 rounded-full items-center shadow-md shadow-black/10"
+            onPress={handleSave}
+          >
+            <Text className="text-white text-lg font-poppins-semibold">
+              Add Account
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  keyboardAvoidingContainer: {
-    flex: 1,
-  },
-  contentWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingTop: 60,
-  },
-  pageTitle: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 25,
-    color: Colors.text,
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  pageSubtitle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 15,
-    color: Colors.textLight,
-    textAlign: "center",
-    marginBottom: 30,
-  },
-  formContainer: {
-    backgroundColor: Colors.white,
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  inputContainer: {
-    width: "100%",
-    marginBottom: 18,
-  },
-  label: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 16,
-    color: Colors.text,
-    marginBottom: 8,
-  },
-  inputGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: Colors.border,
-    backgroundColor: "#F9F9F9",
-  },
-  inputFocused: {
-    borderColor: Colors.primary,
-    borderWidth: 1.5,
-    backgroundColor: Colors.white,
-  },
-  inputError: {
-    borderColor: Colors.redDot,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    fontFamily: "Roboto-Regular",
-    color: Colors.text,
-  },
-  eyeIcon: {
-    padding: 10,
-  },
-  errorText: {
-    color: Colors.redDot,
-    fontFamily: "Roboto-Regular",
-    fontSize: 12,
-    marginTop: 5,
-    paddingLeft: 4,
-  },
-  roleOptions: {
-    flexDirection: "row",
-    width: "100%",
-  },
-  roleButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    borderRadius: 10,
-    alignItems: "center",
-    marginHorizontal: 5,
-  },
-  roleButtonActive: {
-    borderColor: Colors.primary,
-    backgroundColor: "rgba(67, 136, 255, 0.1)",
-  },
-  roleButtonText: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 14,
-    color: Colors.textLight,
-  },
-  roleButtonTextActive: {
-    color: Colors.primary,
-  },
-  buttonWrapper: {
-    padding: 20,
-    backgroundColor: Colors.background,
-  },
-  saveButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 16,
-    borderRadius: 30,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  saveButtonText: {
-    color: Colors.white,
-    fontSize: 18,
-    fontFamily: "Poppins-SemiBold",
-  },
-});
 
 export default AddUserScreen;

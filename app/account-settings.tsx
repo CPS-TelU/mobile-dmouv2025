@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -28,11 +27,9 @@ const AccountSettingsScreen: React.FC = () => {
   const router = useRouter();
   const [userName, setUserName] = useState<string>(initialUserData.name);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-
-  // --- PERUBAHAN 4: State untuk menyimpan peran pengguna ---
   const [userRole, setUserRole] = useState<UserRole | null>(null);
 
-  // State untuk modal
+  // Modal visibility states
   const [isPasswordModalVisible, setPasswordModalVisible] =
     useState<boolean>(false);
   const [isAboutAppModalVisible, setAboutAppModalVisible] =
@@ -41,7 +38,6 @@ const AccountSettingsScreen: React.FC = () => {
 
   const insets = useSafeAreaInsets();
 
-  // --- PERUBAHAN 5: useEffect untuk mengambil peran dari AsyncStorage ---
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
@@ -50,7 +46,7 @@ const AccountSettingsScreen: React.FC = () => {
         )) as UserRole | null;
         setUserRole(role);
       } catch (e) {
-        console.error("Gagal mengambil peran pengguna", e);
+        console.error("Failed to fetch user role", e);
       }
     };
 
@@ -66,7 +62,11 @@ const AccountSettingsScreen: React.FC = () => {
           // Hapus sesi saat logout
           await AsyncStorage.removeItem("userToken");
           await AsyncStorage.removeItem("userRole");
-          router.replace("/(auth)/login");
+          // --- PERUBAHAN DI SINI ---
+          // Set flag bahwa pengguna baru saja logout untuk logika di app/index.tsx
+          await AsyncStorage.setItem("justLoggedOut", "true");
+          // Arahkan ke halaman ip-device sesuai permintaan
+          router.replace("/(auth)/ip-device");
         },
       },
     ]);
@@ -111,9 +111,12 @@ const AccountSettingsScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.fullScreenContainer}>
-      <View style={[styles.blueSection, { paddingTop: insets.top }]}>
-        <View style={styles.profileContainer}>
+    <View className="flex-1 bg-secondary">
+      <View
+        className="h-[40%] bg-secondary px-5"
+        style={{ paddingTop: insets.top }}
+      >
+        <View className="items-center justify-center mt-12">
           <View>
             <Image
               source={
@@ -121,50 +124,58 @@ const AccountSettingsScreen: React.FC = () => {
                   ? { uri: profileImage }
                   : initialUserData.profilePicture
               }
-              style={styles.profilePicture}
+              className="w-[110px] h-[110px] rounded-full border-4 border-white/80"
             />
             <TouchableOpacity
-              style={styles.addPictureButton}
+              className="absolute bottom-0.5 right-0.5 bg-primary rounded-full w-[30px] h-[30px] justify-center items-center border-2 border-white"
               onPress={handleChangeProfilePicture}
             >
               <Ionicons name="add" size={20} color={Colors.white} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.profileName}>{userName}</Text>
+          <Text className="text-white text-2xl font-poppins-semibold mt-4">
+            {userName}
+          </Text>
         </View>
       </View>
 
-      <View style={styles.whiteSection}>
-        <View style={styles.grabber} />
-        <View style={styles.menuOptions}>
+      <View className="flex-1 bg-white px-8 pt-5 rounded-t-[30px] -mt-8">
+        <View className="w-[50px] h-[5px] bg-border rounded-full self-center mb-8" />
+        <View className="w-full">
           {/* Email */}
-          <View style={styles.optionRow}>
+          <View className="flex-row items-center py-4 border-b border-border">
             <Ionicons
               name="mail-outline"
               size={24}
               color={Colors.primary}
-              style={styles.optionIcon}
+              className="mr-5"
             />
             <View>
-              <Text style={styles.optionTitle}>Email</Text>
-              <Text style={styles.optionValue}>{initialUserData.email}</Text>
+              <Text className="text-base font-poppins-semibold text-text">
+                Email
+              </Text>
+              <Text className="text-sm text-textLight mt-1">
+                {initialUserData.email}
+              </Text>
             </View>
           </View>
 
           {/* Name */}
           <TouchableOpacity
-            style={styles.optionRow}
+            className="flex-row items-center py-4 border-b border-border"
             onPress={() => setNameModalVisible(true)}
           >
             <Ionicons
               name="person-outline"
               size={24}
               color={Colors.primary}
-              style={styles.optionIcon}
+              className="mr-5"
             />
-            <View style={styles.optionTextContainer}>
-              <Text style={styles.optionTitle}>Name</Text>
-              <Text style={styles.optionValue}>{userName}</Text>
+            <View className="flex-1">
+              <Text className="text-base font-poppins-semibold text-text">
+                Name
+              </Text>
+              <Text className="text-sm text-textLight mt-1">{userName}</Text>
             </View>
             <Ionicons
               name="chevron-forward"
@@ -175,18 +186,22 @@ const AccountSettingsScreen: React.FC = () => {
 
           {/* Password */}
           <TouchableOpacity
-            style={styles.optionRow}
+            className="flex-row items-center py-4 border-b border-border"
             onPress={() => setPasswordModalVisible(true)}
           >
             <Ionicons
               name="key-outline"
               size={24}
               color={Colors.primary}
-              style={styles.optionIcon}
+              className="mr-5"
             />
-            <View style={styles.optionTextContainer}>
-              <Text style={styles.optionTitle}>Password</Text>
-              <Text style={styles.optionValue}>Change your password</Text>
+            <View className="flex-1">
+              <Text className="text-base font-poppins-semibold text-text">
+                Password
+              </Text>
+              <Text className="text-sm text-textLight mt-1">
+                Change your password
+              </Text>
             </View>
             <Ionicons
               name="chevron-forward"
@@ -195,21 +210,23 @@ const AccountSettingsScreen: React.FC = () => {
             />
           </TouchableOpacity>
 
-          {/* --- PERUBAHAN 6: Tampilkan "Add Account" secara kondisional --- */}
+          {/* Add Account (Conditional) */}
           {userRole === "superuser" && (
             <TouchableOpacity
-              style={styles.optionRow}
+              className="flex-row items-center py-4 border-b border-border"
               onPress={() => router.push("/adduser")}
             >
               <Ionicons
                 name="person-add-outline"
                 size={24}
                 color={Colors.primary}
-                style={styles.optionIcon}
+                className="mr-5"
               />
-              <View style={styles.optionTextContainer}>
-                <Text style={styles.optionTitle}>Add Account</Text>
-                <Text style={styles.optionValue}>
+              <View className="flex-1">
+                <Text className="text-base font-poppins-semibold text-text">
+                  Add Account
+                </Text>
+                <Text className="text-sm text-textLight mt-1">
                   Create a new user profile
                 </Text>
               </View>
@@ -223,18 +240,22 @@ const AccountSettingsScreen: React.FC = () => {
 
           {/* About App */}
           <TouchableOpacity
-            style={styles.optionRow}
+            className="flex-row items-center py-4 border-b border-border"
             onPress={() => setAboutAppModalVisible(true)}
           >
             <Ionicons
               name="information-circle-outline"
               size={24}
               color={Colors.primary}
-              style={styles.optionIcon}
+              className="mr-5"
             />
-            <View style={styles.optionTextContainer}>
-              <Text style={styles.optionTitle}>About App</Text>
-              <Text style={styles.optionValue}>Learn more about the app</Text>
+            <View className="flex-1">
+              <Text className="text-base font-poppins-semibold text-text">
+                About App
+              </Text>
+              <Text className="text-sm text-textLight mt-1">
+                Learn more about the app
+              </Text>
             </View>
             <Ionicons
               name="chevron-forward"
@@ -244,8 +265,13 @@ const AccountSettingsScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Log out</Text>
+        <TouchableOpacity
+          className="bg-primary py-4 rounded-full w-full self-center items-center mt-auto mb-12"
+          onPress={handleLogout}
+        >
+          <Text className="text-white text-base font-poppins-bold">
+            Log out
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -255,12 +281,10 @@ const AccountSettingsScreen: React.FC = () => {
         onClose={() => setPasswordModalVisible(false)}
         onSubmit={handleSubmitPasswordChange}
       />
-
       <AboutAppModal
         visible={isAboutAppModalVisible}
         onClose={() => setAboutAppModalVisible(false)}
       />
-
       <ChangeNameModal
         visible={isNameModalVisible}
         onClose={() => setNameModalVisible(false)}
@@ -272,104 +296,3 @@ const AccountSettingsScreen: React.FC = () => {
 };
 
 export default AccountSettingsScreen;
-
-const styles = StyleSheet.create({
-  fullScreenContainer: {
-    flex: 1,
-    backgroundColor: Colors.secondary,
-  },
-  blueSection: {
-    height: "40%",
-    backgroundColor: Colors.secondary,
-    paddingHorizontal: 20,
-  },
-  profileContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 50,
-  },
-  profilePicture: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    borderWidth: 4,
-    borderColor: "rgba(255, 255, 255, 0.8)",
-  },
-  addPictureButton: {
-    position: "absolute",
-    bottom: 2,
-    right: 2,
-    backgroundColor: Colors.primary,
-    borderRadius: 15,
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: Colors.white,
-  },
-  profileName: {
-    color: Colors.white,
-    fontSize: 24,
-    fontFamily: "Poppins-SemiBold",
-    marginTop: 15,
-  },
-  whiteSection: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 30,
-    paddingTop: 20,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    marginTop: -30,
-  },
-  grabber: {
-    width: 50,
-    height: 5,
-    backgroundColor: Colors.border,
-    borderRadius: 5,
-    alignSelf: "center",
-    marginBottom: 30,
-  },
-  menuOptions: {
-    width: "100%",
-  },
-  optionRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  optionIcon: {
-    marginRight: 20,
-  },
-  optionTextContainer: {
-    flex: 1,
-  },
-  optionTitle: {
-    fontSize: 16,
-    fontFamily: "Poppins-SemiBold",
-    color: Colors.text,
-  },
-  optionValue: {
-    fontSize: 14,
-    color: Colors.textLight,
-    marginTop: 4,
-  },
-  logoutButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 16,
-    borderRadius: 30,
-    width: "100%",
-    alignSelf: "center",
-    alignItems: "center",
-    marginTop: "auto",
-    marginBottom: 50,
-  },
-  logoutButtonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: "Poppins-Bold",
-  },
-});

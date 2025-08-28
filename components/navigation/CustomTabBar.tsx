@@ -1,9 +1,8 @@
-import React from "react";
-// 'Text' sudah dihapus dari import di bawah
 import { Ionicons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { TouchableOpacity, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   withTiming,
@@ -28,22 +27,27 @@ const TabItem = ({
       ? "people"
       : "settings";
 
+  // Logika animasi untuk label teks tetap sama
   const animatedLabelStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(isFocused ? 1 : 0, { duration: 200 }),
-      // Kita hapus translateY agar lebih simpel dan stabil
     };
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.tabItem}>
+    <TouchableOpacity onPress={onPress} className="flex-1 justify-center items-center">
       <Ionicons
         name={isFocused ? iconName : (`${iconName}-outline` as any)}
         size={26}
         color={isFocused ? Colors.primary : Colors.textLight}
       />
-      {/* Struktur label disederhanakan */}
-      <Animated.Text style={[styles.labelText, animatedLabelStyle]}>
+      <Animated.Text
+        // Style statis diubah ke className
+        className="font-poppins-semibold text-[11px] text-primary mt-0.5"
+        // Style dinamis (animasi) tetap menggunakan prop style
+        style={animatedLabelStyle}
+      >
+        {/* Mengambil huruf pertama dan membuatnya kapital */}
         {route.name.charAt(0).toUpperCase() + route.name.slice(1)}
       </Animated.Text>
     </TouchableOpacity>
@@ -52,8 +56,16 @@ const TabItem = ({
 
 const CustomTabBar = ({ state, navigation }: BottomTabBarProps) => {
   return (
-    <View style={styles.tabBarContainer}>
-      <BlurView intensity={95} tint="light" style={styles.blurView}>
+    <View 
+      // Konversi dari styles.tabBarContainer
+      className="absolute bottom-8 left-5 right-5 h-[67px] rounded-[25px] shadow-lg shadow-black/10"
+    >
+      <BlurView
+        intensity={95}
+        tint="light"
+        // Konversi dari styles.blurView
+        className="flex-1 rounded-[25px] overflow-hidden flex-row"
+      >
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
           const onPress = () => {
@@ -75,39 +87,5 @@ const CustomTabBar = ({ state, navigation }: BottomTabBarProps) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  tabBarContainer: {
-    position: "absolute",
-    bottom: 30,
-    left: 20,
-    right: 20,
-    height: 67,
-    borderRadius: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  blurView: {
-    flex: 1,
-    borderRadius: 25,
-    overflow: "hidden",
-    flexDirection: "row",
-  },
-  tabItem: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  labelText: {
-    fontFamily: "Poppins-SemiBold",
-    fontSize: 11,
-    color: Colors.primary,
-    marginTop: 2,
-    // Hapus 'position: absolute' agar layoutnya normal
-  },
-});
 
 export default CustomTabBar;

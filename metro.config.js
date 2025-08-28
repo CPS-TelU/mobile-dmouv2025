@@ -1,4 +1,5 @@
 const { getDefaultConfig } = require("expo/metro-config");
+const { withNativeWind } = require('nativewind/metro');
 
 module.exports = (async () => {
   const config = await getDefaultConfig(__dirname);
@@ -10,5 +11,7 @@ module.exports = (async () => {
     "react-native-svg-transformer"
   );
 
-  return config;
+  return withNativeWind(config, { input: './global.css' });
 })();
+
+

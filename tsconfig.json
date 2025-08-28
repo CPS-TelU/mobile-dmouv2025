@@ -4,7 +4,10 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*", "app/*"] // alias supaya bisa resolve ke dua folder
+      "@/*": [
+        "src/*",
+        "app/*"
+      ]
     }
   },
   "include": [
@@ -14,6 +17,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
   ]
 }

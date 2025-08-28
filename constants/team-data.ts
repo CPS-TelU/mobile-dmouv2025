@@ -1,5 +1,3 @@
-// CONTOH JIKA MENGGUNAKAN FILE JPG
-// profilePic: require("../assets/images/ridho.jpg"),
 import ProfilePlaceholder from "../assets/images/pp.svg";
 
 export const TEAM_DATA = [
@@ -12,7 +10,7 @@ export const TEAM_DATA = [
         code: "APJ",
         major: "Telecommunication Engineering",
         profilePic: require("../assets/team/asepjamaludin.png"),
-        quote: "Talk is cheap. Show me the code",
+        quote: "Talk is cheap, Show me the code",
         socials: {
           instagram: "https://www.instagram.com/_jmldnnn/",
           linkedin: "https://www.linkedin.com/in/asepjamaludin",
@@ -25,8 +23,12 @@ export const TEAM_DATA = [
         code: "ABR",
         major: "Telecommunication Engineering",
         profilePic: ProfilePlaceholder,
-        quote: "The best error message is the one that never appears.",
-        socials: { instagram: "#", linkedin: "#", github: "#" },
+        quote: "Hamoraon, Hagabeon, Hasangapon",
+        socials: {
+          instagram: "https://www.instagram.com/abrah4m.b",
+          linkedin: "https://www.linkedin.com/in/a-benedick/",
+          github: "https://github.com/bramcps",
+        },
       },
       {
         id: "3",
@@ -52,7 +54,7 @@ export const TEAM_DATA = [
         code: "IMI",
         major: "Telecommunication Engineering",
         profilePic: require("../assets/team/hilmy.png"),
-        quote: "Make it work, make it right, make it fast.",
+        quote: "Make it work, make it right, make it fast",
         socials: {
           instagram: "https://www.instagram.com/hilmybaihaaqi_/",
           linkedin: "https://www.linkedin.com/in/hilmy-baihaqi",
@@ -67,10 +69,8 @@ export const TEAM_DATA = [
         profilePic: require("../assets/team/aurel.png"),
         quote: "Good design is good business",
         socials: {
-          instagram:
-            "https://www.instagram.com/aureliasyrch?igsh=MWI1dHNrdDByYTFrZw%3D%3D&utm_source=qr",
-          linkedin:
-            "https://www.linkedin.com/in/aurelia-aisya-rachma-63273b26b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+          instagram: "https://www.instagram.com/aureliasyrch/",
+          linkedin: "https://www.linkedin.com/in/aureliaaisyarachma/",
           github: "https://github.com/aureliasyrch",
         },
       },
@@ -100,7 +100,7 @@ export const TEAM_DATA = [
         code: "TEP",
         major: "Science Data",
         profilePic: require("../assets/team/stephani.png"),
-        quote: "Don't run away. Face it",
+        quote: "Don't run away, Face it",
         socials: {
           instagram: "https://www.instagram.com/stemarsi_/",
           linkedin: "https://www.linkedin.com/in/stephanimsianturi/",
