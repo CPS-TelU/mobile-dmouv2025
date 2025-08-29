@@ -24,7 +24,7 @@ const OnboardingItem = ({ item }: { item: (typeof OnboardingData)[0] }) => {
       <SvgImage width={width * 0.6} height={width * 0.6} />
       <View className="mt-8">
         <Text
-          className="font-poppins-semibold text-3xl text-text text-center mb-2.5"
+          className="font-poppins-semibold text-3xl text-text text-center"
           style={{
             textShadowColor: "rgba(0, 0, 0, 0.4)",
             textShadowOffset: { width: 1.5, height: 1.5 },
@@ -33,7 +33,7 @@ const OnboardingItem = ({ item }: { item: (typeof OnboardingData)[0] }) => {
         >
           {item.title}
         </Text>
-        <Text className="font-poppins-extralight text-lg text-primary text-center px-5 mb-5">
+        <Text className="font-poppins-extralight text-lg text-primary text-center px-5">
           {item.subtitle}
         </Text>
       </View>

@@ -119,11 +119,12 @@ export default function LoginScreen() {
               Email
             </Text>
             <TextInput
-              className={`border rounded-xl px-4 py-3 text-base font-roboto-regular text-text bg-white shadow-sm ${
+              className={`border rounded-xl px-4 h-12 text-base font-roboto-regular text-text bg-white shadow-sm ${
                 focusedInput === "email"
                   ? "border-primary border-2"
                   : "border-border"
               } ${!!errors.email ? "border-redDot" : ""}`}
+              style={{ lineHeight: 20 }}
               placeholder="Enter your email"
               value={email}
               onChangeText={(text) => {
@@ -156,7 +157,8 @@ export default function LoginScreen() {
               } ${!!errors.password ? "border-redDot" : ""}`}
             >
               <TextInput
-                className="flex-1 px-4 py-3 text-base font-roboto-regular text-text"
+                className="flex-1 px-4 h-12 text-base font-roboto-regular text-text"
+                style={{ lineHeight: 20 }}
                 placeholder="Password"
                 value={password}
                 onChangeText={(text) => {

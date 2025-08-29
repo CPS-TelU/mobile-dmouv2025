@@ -8,12 +8,12 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Colors } from "../../constants/Colors";
 import {
   FilterGroup,
   FilterModal,
   FilterType,
 } from "../../components/modal/filter";
+import { Colors } from "../../constants/Colors";
 
 type LogType =
   | "motion"
@@ -25,33 +25,57 @@ type LogType =
   | "automatic";
 
 const DUMMY_HISTORY = [
-    {
-        date: "Wednesday, 15 August 2025",
-        logs: [
-            { type: "lamp-off", message: "Lights are now OFF", time: "23:00 PM" },
-            { type: "fan-on", message: "Fan has been activated", time: "22:15 PM" },
-            { type: "motion", message: "Motion detected around the device", time: "22:15 PM" },
-            { type: "lamp-on", message: "Lights are now ON", time: "19:30 PM" },
-            { type: "fan-off", message: "Fan has been turned off", time: "15:05 PM" },
-        ],
-    },
-    {
-        date: "Thursday, 14 August 2025",
-        logs: [
-            { type: "lamp-off", message: "Lights are now OFF", time: "21:45 PM" },
-            { type: "motion", message: "Motion detected around the device", time: "16:10 PM" },
-            { type: "lamp-on", message: "Lights are now ON", time: "16:09 PM" },
-        ],
-    },
-    {
-        date: "Friday, 13 August 2025",
-        logs: [
-            { type: "schedule", message: "Fan schedule activated: ON", time: "18:00 PM" },
-            { type: "automatic", message: "Lamp turned on automatically", time: "17:30 PM" },
-            { type: "fan-on", message: "Fan started automatically", time: "14:00 PM" },
-            { type: "motion", message: "Motion detected in the morning", time: "08:30 AM" },
-        ],
-    },
+  {
+    date: "Wednesday, 15 August 2025",
+    logs: [
+      { type: "lamp-off", message: "Lights are now OFF", time: "23:00 PM" },
+      { type: "fan-on", message: "Fan has been activated", time: "22:15 PM" },
+      {
+        type: "motion",
+        message: "Motion detected around the device",
+        time: "22:15 PM",
+      },
+      { type: "lamp-on", message: "Lights are now ON", time: "19:30 PM" },
+      { type: "fan-off", message: "Fan has been turned off", time: "15:05 PM" },
+    ],
+  },
+  {
+    date: "Thursday, 14 August 2025",
+    logs: [
+      { type: "lamp-off", message: "Lights are now OFF", time: "21:45 PM" },
+      {
+        type: "motion",
+        message: "Motion detected around the device",
+        time: "16:10 PM",
+      },
+      { type: "lamp-on", message: "Lights are now ON", time: "16:09 PM" },
+    ],
+  },
+  {
+    date: "Friday, 13 August 2025",
+    logs: [
+      {
+        type: "schedule",
+        message: "Fan schedule activated: ON",
+        time: "18:00 PM",
+      },
+      {
+        type: "automatic",
+        message: "Lamp turned on automatically",
+        time: "17:30 PM",
+      },
+      {
+        type: "fan-on",
+        message: "Fan started automatically",
+        time: "14:00 PM",
+      },
+      {
+        type: "motion",
+        message: "Motion detected in the morning",
+        time: "08:30 AM",
+      },
+    ],
+  },
 ];
 
 type LogItemProps = { type: LogType; message: string; time: string };
@@ -216,7 +240,8 @@ export default function HistoryScreen() {
         <View className="flex-row items-center bg-white rounded-2xl px-4 h-14 shadow-md shadow-black/10">
           <Ionicons name="search-outline" size={22} color={Colors.textLight} />
           <TextInput
-            className="flex-1 font-roboto-regular text-base text-text ml-2.5"
+            className="flex-1 font-roboto-regular h-12 text-base text-text ml-2.5"
+            style={{ lineHeight: 20 }}
             placeholder="Search activity..."
             placeholderTextColor={Colors.textLight}
             value={searchQuery}
@@ -234,11 +259,20 @@ export default function HistoryScreen() {
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 100 }}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 20,
+          paddingBottom: 100,
+        }}
+      >
         {paginatedDays.length > 0 ? (
           <>
             {paginatedDays.map((day, index) => (
-              <View key={index} className="bg-white rounded-2xl p-4 mb-5 shadow-lg shadow-black/10">
+              <View
+                key={index}
+                className="bg-white rounded-2xl p-4 mb-5 shadow-lg shadow-black/10"
+              >
                 <Text className="font-poppins-bold text-base text-text mb-4 px-1">
                   {day.date}
                 </Text>
@@ -282,9 +316,7 @@ export default function HistoryScreen() {
                       >
                         <Text
                           className={`font-poppins-bold text-base ${
-                            currentPage === page
-                              ? "text-white"
-                              : "text-primary"
+                            currentPage === page ? "text-white" : "text-primary"
                           }`}
                         >
                           {page}

@@ -52,7 +52,8 @@ export const ChangePasswordModal: React.FC<Props> = ({
       newErrors.newPassword = "Fill this field";
       hasError = true;
     } else if (newPassword.length < 8) {
-      newErrors.newPassword = "New password must be at least 8 characters long.";
+      newErrors.newPassword =
+        "New password must be at least 8 characters long.";
       hasError = true;
     }
     if (!confirmPassword) {
@@ -63,7 +64,8 @@ export const ChangePasswordModal: React.FC<Props> = ({
       hasError = true;
     }
     if (newPassword && currentPassword === newPassword) {
-      newErrors.newPassword = "New password cannot be the same as the current one.";
+      newErrors.newPassword =
+        "New password cannot be the same as the current one.";
       hasError = true;
     }
 
@@ -131,7 +133,8 @@ export const ChangePasswordModal: React.FC<Props> = ({
               } ${!!errors.currentPassword ? "border-redDot" : ""}`}
             >
               <TextInput
-                className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                style={{ lineHeight: 20 }}
                 placeholder="Current Password"
                 placeholderTextColor={Colors.textLight}
                 secureTextEntry={!isCurrentPasswordVisible}
@@ -144,7 +147,9 @@ export const ChangePasswordModal: React.FC<Props> = ({
                 onBlur={() => setFocusedInput(null)}
               />
               <TouchableOpacity
-                onPress={() => setCurrentPasswordVisible(!isCurrentPasswordVisible)}
+                onPress={() =>
+                  setCurrentPasswordVisible(!isCurrentPasswordVisible)
+                }
                 className="p-2.5"
               >
                 <Ionicons
@@ -171,7 +176,8 @@ export const ChangePasswordModal: React.FC<Props> = ({
               } ${!!errors.newPassword ? "border-redDot" : ""}`}
             >
               <TextInput
-                className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                style={{ lineHeight: 20 }}
                 placeholder="New Password (min. 8 characters)"
                 placeholderTextColor={Colors.textLight}
                 secureTextEntry={!isNewPasswordVisible}
@@ -211,7 +217,8 @@ export const ChangePasswordModal: React.FC<Props> = ({
               } ${!!errors.confirmPassword ? "border-redDot" : ""}`}
             >
               <TextInput
-                className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                style={{ lineHeight: 20 }}
                 placeholder="Confirm New Password"
                 placeholderTextColor={Colors.textLight}
                 secureTextEntry={!isConfirmPasswordVisible}
