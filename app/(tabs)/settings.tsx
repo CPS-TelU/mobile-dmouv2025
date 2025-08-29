@@ -7,26 +7,23 @@ import {
   Keyboard,
   LayoutAnimation,
   Modal,
-  Platform,
   Pressable,
   Text,
   TextInput,
   TouchableOpacity,
-  UIManager,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Colors } from "../../constants/Colors";
+import { useFan } from "../../context/FanContext";
+import { useLamp } from "../../context/LampContext";
 
-// Enable LayoutAnimation for Android
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
+interface ScheduleFormProps {
+  selectedDevice: "lamp" | "fan";
+  schedulesForDevice: Schedule[];
+  onSubmit: (data: Omit<Schedule, "id">) => void;
 }
-
 type Device = "lamp" | "fan";
 type Schedule = { id: string; day: string; onTime: string; offTime: string };
 
@@ -63,12 +60,6 @@ const timeToMinutes = (timeStr: string) => {
 };
 
 // --- Schedule Form Component ---
-interface ScheduleFormProps {
-  selectedDevice: "lamp" | "fan";
-  schedulesForDevice: Schedule[];
-  onSubmit: (data: Omit<Schedule, "id">) => void;
-}
-
 const ScheduleFormComponent = ({
   selectedDevice,
   schedulesForDevice,
@@ -179,9 +170,10 @@ const ScheduleFormComponent = ({
         <View className="mt-4">
           <View className="flex-row items-center bg-background rounded-xl px-4 mb-2.5">
             <Ionicons name="time-outline" size={20} color={Colors.textLight} />
-            <Text className="text-base text-text mx-2.5">On Time</Text>
+            <Text className="text-lg text-text mx-2.5">On Time</Text>
             <TextInput
-              className="flex-1 py-4 text-base text-right"
+              className="flex-1 py-4 h-18 text-base text-right"
+              style={{ lineHeight: 20 }}
               placeholder="HH:MM"
               keyboardType="numeric"
               maxLength={5}
@@ -193,9 +185,10 @@ const ScheduleFormComponent = ({
           </View>
           <View className="flex-row items-center bg-background rounded-xl px-4">
             <Ionicons name="time-outline" size={20} color={Colors.textLight} />
-            <Text className="text-base text-text mx-2.5">Off Time</Text>
+            <Text className="text-lg text-text mx-2.5">Off Time</Text>
             <TextInput
-              className="flex-1 py-4 text-base text-right"
+              className="flex-1 py-4 h-18 text-base text-right"
+              style={{ lineHeight: 20 }}
               placeholder="HH:MM"
               keyboardType="numeric"
               maxLength={5}
@@ -218,7 +211,7 @@ const ScheduleFormComponent = ({
           onPress={handleLocalSubmit}
           disabled={isSubmitDisabled}
         >
-          <Text className="text-base font-bold text-white">Save Schedule</Text>
+          <Text className="text-lg font-bold text-white">Save Schedule</Text>
         </TouchableOpacity>
         {error && error.field === "submit" && (
           <Text className="text-redDot text-sm text-center mt-4 font-medium">
@@ -260,24 +253,45 @@ const ScheduleFormComponent = ({
     </>
   );
 };
-
 const ScheduleForm = React.memo(ScheduleFormComponent);
+
+// --- [TAMBAHKAN] Komponen Overlay untuk Mode Otomatis ---
+const AutoModeOverlay = () => (
+  <View className="absolute inset-0 bg-gray-100/80 justify-center items-center rounded-2xl z-10 p-4">
+    <Ionicons name="lock-closed" size={32} color={Colors.textLight} />
+    <Text className="text-center font-bold text-textLight mt-2">
+      Automatic Mode is On
+    </Text>
+    <Text className="text-center text-base text-textLight">
+      Schedules cannot be modified.
+    </Text>
+  </View>
+);
 
 // --- MAIN COMPONENT ---
 export default function SettingsScreen() {
   const router = useRouter();
+  // ... (state yang sudah ada)
   const [selectedDevice, setSelectedDevice] = useState<Device>("lamp");
   const [schedules, setSchedules] = useState(initialSchedules);
   const [profileImage] = useState<string | null>(null);
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
   const fadeAnim = useState(new Animated.Value(0))[0];
-
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
   const [editOnTime, setEditOnTime] = useState("");
   const [editOffTime, setEditOffTime] = useState("");
   const [editError, setEditError] = useState<string | null>(null);
 
+  // --- [TAMBAHKAN] Panggil hook konteks ---
+  const { isAutoMode: isFanAuto } = useFan();
+  const { isAutoMode: isLampAuto } = useLamp();
+
+  // --- [TAMBAHKAN] Helper untuk status auto mode perangkat saat ini ---
+  const isCurrentDeviceAuto =
+    selectedDevice === "lamp" ? isLampAuto : isFanAuto;
+
+  // ... (semua fungsi handler seperti handleDeviceChange, showSuccessMessage, dll tetap sama) ...
   const handleEditTimeChange = useCallback(
     (text: string, setter: (value: string) => void) => {
       setEditError(null);
@@ -410,27 +424,36 @@ export default function SettingsScreen() {
   const renderScheduleItem = ({ item }: { item: Schedule }) => (
     <View className="bg-white rounded-2xl p-4 mb-2.5 flex-row items-center justify-between shadow-sm shadow-black/5 border border-gray-100">
       <View className="flex-1">
-        <Text className="text-base font-bold text-primary mb-2">
-          {item.day}
-        </Text>
+        <Text className="text-lg font-bold text-primary mb-2">{item.day}</Text>
         <View className="flex-row justify-between">
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-full bg-greenDot mr-2" />
-            <Text className="text-sm text-textLight mr-1">On</Text>
-            <Text className="text-sm font-semibold text-text">{item.onTime}</Text>
+            <Text className="text-base text-textLight mr-1">On</Text>
+            <Text className="text-base font-semibold text-text">
+              {item.onTime}
+            </Text>
           </View>
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-full bg-redDot mr-2" />
-            <Text className="text-sm text-textLight mr-1">Off</Text>
-            <Text className="text-sm font-semibold text-text">{item.offTime}</Text>
+            <Text className="text-base text-textLight mr-1">Off</Text>
+            <Text className="text-base font-semibold text-text">
+              {item.offTime}
+            </Text>
           </View>
         </View>
       </View>
       <TouchableOpacity
         onPress={() => handleStartEdit(item)}
         className="pl-4 p-1"
+        // --- [UBAH] Menonaktifkan tombol edit ---
+        disabled={isCurrentDeviceAuto}
       >
-        <Ionicons name="create-outline" size={24} color={Colors.primary} />
+        <Ionicons
+          name="create-outline"
+          size={20}
+          // --- [UBAH] Mengubah warna ikon jika nonaktif ---
+          color={isCurrentDeviceAuto ? Colors.textLight : Colors.primary}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -443,6 +466,8 @@ export default function SettingsScreen() {
           rowMap[data.item.id].closeRow();
           handleDelete(data.item.id);
         }}
+        // --- [UBAH] Menonaktifkan tombol hapus ---
+        disabled={isCurrentDeviceAuto}
       >
         <Ionicons name="trash-outline" size={22} color={Colors.white} />
       </TouchableOpacity>
@@ -452,6 +477,7 @@ export default function SettingsScreen() {
   const renderListHeader = useCallback(
     () => (
       <>
+        {/* ... (bagian profile header tetap sama) ... */}
         <View className="items-center my-5">
           <Image
             source={
@@ -459,30 +485,31 @@ export default function SettingsScreen() {
                 ? { uri: profileImage }
                 : require("../../assets/images/pp.svg")
             }
-            className="w-28 h-28 rounded-full border-4 border-white"
+            className="w-36 h-36 rounded-full border-4 border-white"
           />
-          <Text className="text-xl font-bold text-text mt-3">
-            TimRisetCPS
+          <Text className="text-xl font-bold text-text mt-3">TimRisetCPS</Text>
+          <Text className="text-base text-textLight">
+            TimRisetCPS@gmail.com
           </Text>
-          <Text className="text-base text-textLight">TimRisetCPS@gmail.com</Text>
           <TouchableOpacity
             className="mt-4 bg-white/80 py-2 px-5 rounded-full"
             onPress={() => router.push("/account-settings")}
           >
-            <Text className="text-sm text-primary font-semibold">
+            <Text className="text-base text-primary font-semibold">
               Edit Profile
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="flex-row bg-white/70 rounded-full p-1 mb-5">
+        <View className="flex-row bg-white/70 rounded-full p-0.5 mb-5">
+          {/* ... (bagian tombol Lamp/Fan tetap sama) ... */}
           <TouchableOpacity
-            className={`flex-1 py-2.5 rounded-full ${
+            className={`flex-1 py-3 rounded-full ${
               selectedDevice === "lamp" ? "bg-white shadow" : ""
             }`}
             onPress={() => handleDeviceChange("lamp")}
           >
             <Text
-              className={`text-center text-base font-semibold ${
+              className={`text-center text-lg font-semibold ${
                 selectedDevice === "lamp" ? "text-primary" : "text-textLight"
               }`}
             >
@@ -490,13 +517,13 @@ export default function SettingsScreen() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`flex-1 py-2.5 rounded-full ${
+            className={`flex-1 py-3 rounded-full ${
               selectedDevice === "fan" ? "bg-white shadow" : ""
             }`}
             onPress={() => handleDeviceChange("fan")}
           >
             <Text
-              className={`text-center text-base font-semibold ${
+              className={`text-center text-lg font-semibold ${
                 selectedDevice === "fan" ? "text-primary" : "text-textLight"
               }`}
             >
@@ -505,14 +532,20 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        <ScheduleForm
-          selectedDevice={selectedDevice}
-          schedulesForDevice={schedules[selectedDevice]}
-          onSubmit={handleSubmitNewSchedule}
-        />
+        {/* --- [UBAH] Membungkus form dan menambahkan overlay --- */}
+        <View>
+          <ScheduleForm
+            selectedDevice={selectedDevice}
+            schedulesForDevice={schedules[selectedDevice]}
+            onSubmit={handleSubmitNewSchedule}
+          />
+          {isCurrentDeviceAuto && <AutoModeOverlay />}
+        </View>
 
-        <View className="mt-2.5">
-          <Text className="text-lg font-bold text-text">Saved Schedules</Text>
+        <View className="mt-3">
+          <Text className="text-xl mb-3 font-bold text-text">
+            Saved Schedules
+          </Text>
         </View>
       </>
     ),
@@ -523,6 +556,8 @@ export default function SettingsScreen() {
       router,
       handleDeviceChange,
       handleSubmitNewSchedule,
+      // --- [TAMBAHKAN] dependensi baru ---
+      isCurrentDeviceAuto,
     ]
   );
 
@@ -533,20 +568,27 @@ export default function SettingsScreen() {
     >
       <Pressable className="flex-1" onPress={Keyboard.dismiss}>
         <SwipeListView
+          // ... (props lainnya)
           style={{ flex: 1 }}
           data={schedules[selectedDevice]}
           renderItem={renderScheduleItem}
           renderHiddenItem={renderHiddenItem}
           rightOpenValue={-90}
-          disableRightSwipe
+          // --- [UBAH] Menonaktifkan swipe jika mode auto aktif ---
+          disableRightSwipe={isCurrentDeviceAuto}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={renderListHeader}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 150, paddingTop: 50 }}
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+            paddingBottom: 150,
+            paddingTop: 50,
+          }}
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
         />
       </Pressable>
 
+      {/* ... (Modal Edit dan Animated.View untuk pesan sukses tetap sama) ... */}
       {/* Edit Schedule Modal */}
       {editingSchedule && (
         <Modal
@@ -575,9 +617,10 @@ export default function SettingsScreen() {
                     size={20}
                     color={Colors.textLight}
                   />
-                  <Text className="text-base text-text mx-2.5">On Time</Text>
+                  <Text className="text-lg text-text mx-2.5">On Time</Text>
                   <TextInput
-                    className="flex-1 py-4 text-base text-right"
+                    className="flex-1 py-4 h-19 text-base text-right"
+                    style={{ lineHeight: 20 }}
                     placeholder="HH:MM"
                     keyboardType="numeric"
                     maxLength={5}
@@ -593,9 +636,10 @@ export default function SettingsScreen() {
                     size={20}
                     color={Colors.textLight}
                   />
-                  <Text className="text-base text-text mx-2.5">Off Time</Text>
+                  <Text className="text-lg text-text mx-2.5">Off Time</Text>
                   <TextInput
-                    className="flex-1 py-4 text-base text-right"
+                    className="flex-1 py-4 h-19text-base text-right"
+                    style={{ lineHeight: 20 }}
                     placeholder="HH:MM"
                     keyboardType="numeric"
                     maxLength={5}

@@ -1,3 +1,4 @@
+// LampContext.tsx
 import React, {
   createContext,
   Dispatch,
@@ -14,7 +15,11 @@ interface LampContextType {
 
 const LampContext = createContext<LampContextType | undefined>(undefined);
 
-export const LampProvider = ({ children }: { children: ReactNode }) => {
+interface LampProviderProps {
+  children: ReactNode;
+}
+
+export const LampProvider: React.FC<LampProviderProps> = ({ children }) => {
   const [isAutoMode, setIsAutoMode] = useState(false);
 
   return (
@@ -24,7 +29,7 @@ export const LampProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useLamp = () => {
+export const useLamp = (): LampContextType => {
   const context = useContext(LampContext);
   if (context === undefined) {
     throw new Error("useLamp must be used within a LampProvider");

@@ -26,22 +26,14 @@ export default function AppEntry() {
         const userToken = await AsyncStorage.getItem("userToken");
 
         if (userToken) {
-          // Pengguna masih login, arahkan ke home
           setInitialRoute("/(tabs)/home");
         } else {
-          // --- LOGIKA BARU DI SINI ---
-          // Pengguna tidak login, cek apakah mereka baru saja logout
           const justLoggedOut = await AsyncStorage.getItem("justLoggedOut");
 
           if (justLoggedOut === "true") {
-            // Skenario 1: Baru saja menekan tombol logout
-            // Hapus penanda agar tidak aktif lagi
             await AsyncStorage.removeItem("justLoggedOut");
-            // Arahkan ke halaman IP Device
             setInitialRoute("/(auth)/ip-device");
           } else {
-            // Skenario 2: Membuka aplikasi dari awal (saat sudah logout)
-            // Selalu arahkan ke Onboarding sesuai permintaan
             setInitialRoute("/(auth)/onboarding");
           }
         }

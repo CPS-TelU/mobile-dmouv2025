@@ -1,3 +1,4 @@
+// FanContext.tsx
 import React, {
   createContext,
   Dispatch,
@@ -14,7 +15,11 @@ interface FanContextType {
 
 const FanContext = createContext<FanContextType | undefined>(undefined);
 
-export const FanProvider = ({ children }: { children: ReactNode }) => {
+interface FanProviderProps {
+  children: ReactNode;
+}
+
+export const FanProvider: React.FC<FanProviderProps> = ({ children }) => {
   const [isAutoMode, setIsAutoMode] = useState(false);
 
   return (
@@ -24,7 +29,7 @@ export const FanProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useFan = () => {
+export const useFan = (): FanContextType => {
   const context = useContext(FanContext);
   if (context === undefined) {
     throw new Error("useFan must be used within a FanProvider");
