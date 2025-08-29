@@ -12,8 +12,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle, Path, Rect, SvgProps } from "react-native-svg";
-import { TEAM_DATA } from "../../constants/team-data";
 import { Colors } from "../../constants/Colors";
+import { TEAM_DATA } from "../../constants/team-data";
 
 // --- TYPE DEFINITIONS ---
 type Member = {
@@ -122,7 +122,7 @@ const TeamMemberCard = ({
           {code}
         </Text>
         <Text
-          className="font-poppins-semibold text-xs text-primary text-center mt-0.5"
+          className="font-poppins-semibold text-sm text-primary text-center mt-0.5"
           numberOfLines={1}
         >
           {name}
@@ -169,11 +169,11 @@ export default function TeamsScreen() {
     >
       <View className="items-center justify-center pt-16 pb-4 bg-background border-b border-border">
         <View className="items-center">
-          <Text className="font-poppins-regular text-base text-text">
+          <Text className="font-poppins-regular text-lg text-text">
             RESEARCH DIVISION 2023
           </Text>
           <Text
-            className="font-roboto-medium text-2xl text-text tracking-wider"
+            className="font-roboto-medium text-3xl text-text tracking-wider"
             style={{
               textShadowColor: "rgba(0, 0, 0, 0.2)",
               textShadowOffset: { width: 1, height: 2 },
@@ -243,18 +243,18 @@ export default function TeamsScreen() {
               <Text className="font-poppins-bold text-2xl text-primary text-center">
                 {selectedMember.name}
               </Text>
-              <Text className="font-roboto-medium text-base text-text text-center mb-1">
+              <Text className="font-roboto-medium text-lg text-text text-center mb-1">
                 {selectedMember.code}
               </Text>
-              <Text className="font-poppins-regular text-sm text-textLight text-center mb-4">
+              <Text className="font-poppins-regular text-base text-textLight text-center mb-4">
                 {selectedMember.major}
               </Text>
 
               <View className="w-full border-t border-border pt-4 mb-5">
-                <Text className="font-poppins-semibold text-xs text-text text-center mb-1 uppercase tracking-widest">
+                <Text className="font-poppins-semibold text-sm text-text text-center mb-1 uppercase tracking-widest">
                   Motto
                 </Text>
-                <Text className="font-poppins-regular italic text-sm text-textLight text-center px-2.5 leading-5">
+                <Text className="font-poppins-regular italic text-base text-textLight text-center px-2.5 leading-5">
                   &quot;{selectedMember.quote}&quot;
                 </Text>
               </View>

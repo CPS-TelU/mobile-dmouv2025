@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
   Modal,
+  Pressable,
+  Text,
   TextInput,
   TouchableOpacity,
-  Alert,
-  Pressable,
+  View,
 } from "react-native";
 import { Colors } from "../../constants/Colors";
 
@@ -73,7 +73,8 @@ export const ChangeNameModal: React.FC<Props> = ({
             }`}
           >
             <TextInput
-              className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+              className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+              style={{ lineHeight: 20 }}
               placeholder="Enter your new name"
               placeholderTextColor={Colors.textLight}
               value={name}
@@ -90,7 +91,7 @@ export const ChangeNameModal: React.FC<Props> = ({
               className="flex-1 bg-border py-4 rounded-2xl items-center mr-1.5"
               onPress={handleCloseModal}
             >
-              <Text className="text-text text-base font-poppins-semibold">
+              <Text className="text-text text-lg font-poppins-semibold">
                 Cancel
               </Text>
             </TouchableOpacity>
@@ -98,7 +99,7 @@ export const ChangeNameModal: React.FC<Props> = ({
               className="flex-1 bg-primary py-4 rounded-2xl items-center ml-1.5"
               onPress={handleSave}
             >
-              <Text className="text-white text-base font-poppins-semibold">
+              <Text className="text-white text-lg font-poppins-semibold">
                 Save
               </Text>
             </TouchableOpacity>

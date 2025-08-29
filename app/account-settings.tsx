@@ -3,13 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { UserRole } from "../api/auth";
 import AboutAppModal from "../components/modal/about-app";
@@ -133,7 +127,7 @@ const AccountSettingsScreen: React.FC = () => {
               <Ionicons name="add" size={20} color={Colors.white} />
             </TouchableOpacity>
           </View>
-          <Text className="text-white text-2xl font-poppins-semibold mt-4">
+          <Text className="text-white text-3xl font-poppins-semibold mt-4">
             {userName}
           </Text>
         </View>
@@ -146,15 +140,15 @@ const AccountSettingsScreen: React.FC = () => {
           <View className="flex-row items-center py-4 border-b border-border">
             <Ionicons
               name="mail-outline"
-              size={24}
+              size={26}
               color={Colors.primary}
               className="mr-5"
             />
             <View>
-              <Text className="text-base font-poppins-semibold text-text">
+              <Text className="text-lg font-poppins-semibold text-text">
                 Email
               </Text>
-              <Text className="text-sm text-textLight mt-1">
+              <Text className="text-base text-textLight">
                 {initialUserData.email}
               </Text>
             </View>
@@ -167,19 +161,19 @@ const AccountSettingsScreen: React.FC = () => {
           >
             <Ionicons
               name="person-outline"
-              size={24}
+              size={26}
               color={Colors.primary}
               className="mr-5"
             />
             <View className="flex-1">
-              <Text className="text-base font-poppins-semibold text-text">
+              <Text className="text-lg font-poppins-semibold text-text">
                 Name
               </Text>
-              <Text className="text-sm text-textLight mt-1">{userName}</Text>
+              <Text className="text-base text-textLight">{userName}</Text>
             </View>
             <Ionicons
               name="chevron-forward"
-              size={22}
+              size={24}
               color={Colors.textLight}
             />
           </TouchableOpacity>
@@ -191,21 +185,21 @@ const AccountSettingsScreen: React.FC = () => {
           >
             <Ionicons
               name="key-outline"
-              size={24}
+              size={26}
               color={Colors.primary}
               className="mr-5"
             />
             <View className="flex-1">
-              <Text className="text-base font-poppins-semibold text-text">
+              <Text className="text-lg font-poppins-semibold text-text">
                 Password
               </Text>
-              <Text className="text-sm text-textLight mt-1">
+              <Text className="text-base text-textLight">
                 Change your password
               </Text>
             </View>
             <Ionicons
               name="chevron-forward"
-              size={22}
+              size={24}
               color={Colors.textLight}
             />
           </TouchableOpacity>
@@ -218,21 +212,21 @@ const AccountSettingsScreen: React.FC = () => {
             >
               <Ionicons
                 name="person-add-outline"
-                size={24}
+                size={26}
                 color={Colors.primary}
                 className="mr-5"
               />
               <View className="flex-1">
-                <Text className="text-base font-poppins-semibold text-text">
+                <Text className="text-lg font-poppins-semibold text-text">
                   Add Account
                 </Text>
-                <Text className="text-sm text-textLight mt-1">
+                <Text className="text-base text-textLight">
                   Create a new user profile
                 </Text>
               </View>
               <Ionicons
                 name="chevron-forward"
-                size={22}
+                size={24}
                 color={Colors.textLight}
               />
             </TouchableOpacity>
@@ -245,21 +239,21 @@ const AccountSettingsScreen: React.FC = () => {
           >
             <Ionicons
               name="information-circle-outline"
-              size={24}
+              size={26}
               color={Colors.primary}
               className="mr-5"
             />
             <View className="flex-1">
-              <Text className="text-base font-poppins-semibold text-text">
+              <Text className="text-lg font-poppins-semibold text-text">
                 About App
               </Text>
-              <Text className="text-sm text-textLight mt-1">
+              <Text className="text-base text-textLight">
                 Learn more about the app
               </Text>
             </View>
             <Ionicons
               name="chevron-forward"
-              size={22}
+              size={24}
               color={Colors.textLight}
             />
           </TouchableOpacity>
@@ -269,9 +263,7 @@ const AccountSettingsScreen: React.FC = () => {
           className="bg-primary py-4 rounded-full w-full self-center items-center mt-auto mb-12"
           onPress={handleLogout}
         >
-          <Text className="text-white text-base font-poppins-bold">
-            Log out
-          </Text>
+          <Text className="text-white text-lg font-poppins-bold">Log out</Text>
         </TouchableOpacity>
       </View>
 

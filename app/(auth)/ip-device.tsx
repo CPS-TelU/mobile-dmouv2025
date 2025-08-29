@@ -18,7 +18,7 @@ export default function IpDeviceScreen() {
   const [ssid, setSsid] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [focusedInput, setFocusedInput] = useState < string | null > (null);
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
   const router = useRouter();
   const [errors, setErrors] = useState({
     ipAddress: "",
@@ -86,11 +86,12 @@ export default function IpDeviceScreen() {
               IP Device
             </Text>
             <TextInput
-              className={`border rounded-xl px-4 py-3 text-base font-roboto-regular text-text bg-white shadow-sm ${
+              className={`border rounded-xl px-4 h-12 text-base font-roboto-regular text-text bg-white shadow-sm ${
                 focusedInput === "ip"
                   ? "border-primary border-2"
                   : "border-border"
               } ${!!errors.ipAddress ? "border-redDot" : ""}`}
+              style={{ lineHeight: 20 }} // biar teks tidak kepotong
               placeholder="Enter Your IP Device"
               placeholderTextColor={Colors.textLight}
               value={ipAddress}
@@ -118,11 +119,12 @@ export default function IpDeviceScreen() {
               </Text>
             </View>
             <TextInput
-              className={`border rounded-xl px-4 py-3 text-base font-roboto-regular text-text bg-white shadow-sm ${
+              className={`border rounded-xl px-4 h-12 text-base font-roboto-regular text-text bg-white shadow-sm ${
                 focusedInput === "ssid"
                   ? "border-primary border-2"
                   : "border-border"
               } ${!!errors.ssid ? "border-redDot" : ""}`}
+              style={{ lineHeight: 20 }}
               placeholder="SSID Name"
               placeholderTextColor={Colors.textLight}
               value={ssid}
@@ -151,7 +153,8 @@ export default function IpDeviceScreen() {
               } ${!!errors.password ? "border-redDot" : ""}`}
             >
               <TextInput
-                className="flex-1 px-4 py-3 text-base font-roboto-regular text-text"
+                className="flex-1 px-4 h-12 text-base font-roboto-regular text-text"
+                style={{ lineHeight: 20 }}
                 placeholder="Password"
                 placeholderTextColor={Colors.textLight}
                 value={password}

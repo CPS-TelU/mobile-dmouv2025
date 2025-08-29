@@ -135,7 +135,7 @@ const AddUserScreen: React.FC = () => {
             <View className="bg-white rounded-2xl p-5 shadow-lg shadow-black/10">
               {/* Name Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Full Name
                 </Text>
                 <View
@@ -146,7 +146,8 @@ const AddUserScreen: React.FC = () => {
                   } ${!!errors.name ? "border-redDot" : ""}`}
                 >
                   <TextInput
-                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                    style={{ lineHeight: 20 }}
                     placeholder="Enter full name"
                     placeholderTextColor={Colors.textLight}
                     value={name}
@@ -167,7 +168,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Email Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Email Address
                 </Text>
                 <View
@@ -178,7 +179,8 @@ const AddUserScreen: React.FC = () => {
                   } ${!!errors.email ? "border-redDot" : ""}`}
                 >
                   <TextInput
-                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                    style={{ lineHeight: 20 }}
                     placeholder="Enter email address"
                     placeholderTextColor={Colors.textLight}
                     value={email}
@@ -201,7 +203,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Password Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Password
                 </Text>
                 <View
@@ -212,7 +214,8 @@ const AddUserScreen: React.FC = () => {
                   } ${!!errors.password ? "border-redDot" : ""}`}
                 >
                   <TextInput
-                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                    style={{ lineHeight: 20 }}
                     placeholder="Min. 8 characters"
                     placeholderTextColor={Colors.textLight}
                     secureTextEntry={!isPasswordVisible}
@@ -244,7 +247,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Confirm Password Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Confirm Password
                 </Text>
                 <View
@@ -255,7 +258,8 @@ const AddUserScreen: React.FC = () => {
                   } ${!!errors.confirmPassword ? "border-redDot" : ""}`}
                 >
                   <TextInput
-                    className="flex-1 py-3 px-4 text-base font-roboto-regular text-text"
+                    className="flex-1 h-12 px-4 text-base font-roboto-regular text-text"
+                    style={{ lineHeight: 20 }}
                     placeholder="Re-enter password"
                     placeholderTextColor={Colors.textLight}
                     secureTextEntry={!isConfirmPasswordVisible}
@@ -289,7 +293,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Role Selection */}
               <View className="w-full mb-2">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Select Role
                 </Text>
                 <View className="flex-row w-full">
@@ -302,7 +306,7 @@ const AddUserScreen: React.FC = () => {
                     onPress={() => setRole("user")}
                   >
                     <Text
-                      className={`font-poppins-medium text-sm ${
+                      className={`font-poppins-medium text-base ${
                         role === "user" ? "text-primary" : "text-textLight"
                       }`}
                     >
@@ -318,10 +322,8 @@ const AddUserScreen: React.FC = () => {
                     onPress={() => setRole("superuser")}
                   >
                     <Text
-                      className={`font-poppins-medium text-sm ${
-                        role === "superuser"
-                          ? "text-primary"
-                          : "text-textLight"
+                      className={`font-poppins-medium text-base ${
+                        role === "superuser" ? "text-primary" : "text-textLight"
                       }`}
                     >
                       Superuser
