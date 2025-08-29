@@ -60,7 +60,7 @@ const AccountSettingsScreen: React.FC = () => {
           // Set flag bahwa pengguna baru saja logout untuk logika di app/index.tsx
           await AsyncStorage.setItem("justLoggedOut", "true");
           // Arahkan ke halaman ip-device sesuai permintaan
-          router.replace("/(auth)/ip-device");
+          router.replace("/(auth)/login");
         },
       },
     ]);
