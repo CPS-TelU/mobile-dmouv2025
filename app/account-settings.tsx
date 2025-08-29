@@ -263,9 +263,7 @@ const AccountSettingsScreen: React.FC = () => {
           className="bg-primary py-4 rounded-full w-full self-center items-center mt-auto mb-12"
           onPress={handleLogout}
         >
-          <Text className="text-white text-base font-poppins-bold">
-            Log out
-          </Text>
+          <Text className="text-white text-lg font-poppins-bold">Log out</Text>
         </TouchableOpacity>
       </View>
 

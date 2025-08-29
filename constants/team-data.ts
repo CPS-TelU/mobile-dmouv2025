@@ -1,5 +1,3 @@
-import ProfilePlaceholder from "../assets/images/pp.svg";
-
 export const TEAM_DATA = [
   {
     role: "Backend",
@@ -22,7 +20,7 @@ export const TEAM_DATA = [
         name: "Abraham Benedick",
         code: "ABR",
         major: "Telecommunication Engineering",
-        profilePic: ProfilePlaceholder,
+        profilePic: require("../assets/team/bram.png"),
         quote: "Hamoraon, Hagabeon, Hasangapon",
         socials: {
           instagram: "https://www.instagram.com/abrah4m.b",
@@ -143,7 +141,7 @@ export const TEAM_DATA = [
         name: "Ridho Anugrah Mulyadi",
         code: "RAM",
         major: "Computer Engineering",
-        profilePic: ProfilePlaceholder,
+        profilePic: require("../assets/team/ridho.png"),
         quote: "Win Win Win",
         socials: {
           instagram: "https://www.instagram.com/ridhokarlo",
