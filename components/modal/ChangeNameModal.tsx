@@ -91,7 +91,7 @@ export const ChangeNameModal: React.FC<Props> = ({
               className="flex-1 bg-border py-4 rounded-2xl items-center mr-1.5"
               onPress={handleCloseModal}
             >
-              <Text className="text-text text-base font-poppins-semibold">
+              <Text className="text-text text-lg font-poppins-semibold">
                 Cancel
               </Text>
             </TouchableOpacity>
@@ -99,7 +99,7 @@ export const ChangeNameModal: React.FC<Props> = ({
               className="flex-1 bg-primary py-4 rounded-2xl items-center ml-1.5"
               onPress={handleSave}
             >
-              <Text className="text-white text-base font-poppins-semibold">
+              <Text className="text-white text-lg font-poppins-semibold">
                 Save
               </Text>
             </TouchableOpacity>

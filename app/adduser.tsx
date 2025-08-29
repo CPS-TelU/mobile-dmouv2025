@@ -135,7 +135,7 @@ const AddUserScreen: React.FC = () => {
             <View className="bg-white rounded-2xl p-5 shadow-lg shadow-black/10">
               {/* Name Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Full Name
                 </Text>
                 <View
@@ -168,7 +168,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Email Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Email Address
                 </Text>
                 <View
@@ -203,7 +203,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Password Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Password
                 </Text>
                 <View
@@ -247,7 +247,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Confirm Password Input */}
               <View className="w-full mb-5">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Confirm Password
                 </Text>
                 <View
@@ -293,7 +293,7 @@ const AddUserScreen: React.FC = () => {
 
               {/* Role Selection */}
               <View className="w-full mb-2">
-                <Text className="font-poppins-semibold text-base text-text mb-2">
+                <Text className="font-poppins-semibold text-lg text-text mb-2">
                   Select Role
                 </Text>
                 <View className="flex-row w-full">
@@ -306,7 +306,7 @@ const AddUserScreen: React.FC = () => {
                     onPress={() => setRole("user")}
                   >
                     <Text
-                      className={`font-poppins-medium text-sm ${
+                      className={`font-poppins-medium text-base ${
                         role === "user" ? "text-primary" : "text-textLight"
                       }`}
                     >
@@ -322,7 +322,7 @@ const AddUserScreen: React.FC = () => {
                     onPress={() => setRole("superuser")}
                   >
                     <Text
-                      className={`font-poppins-medium text-sm ${
+                      className={`font-poppins-medium text-base ${
                         role === "superuser" ? "text-primary" : "text-textLight"
                       }`}
                     >

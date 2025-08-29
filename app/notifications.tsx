@@ -29,18 +29,18 @@ type LogEntry = {
 };
 
 const DUMMY_LOGS: LogEntry[] = [
-    { id: "1", date: "August 13 at 15:00 PM", type: "motion" },
-    { id: "2", date: "August 13 at 10:00 PM", type: "schedule" },
-    { id: "3", date: "August 12 at 15:00 PM", type: "automatic" },
-    { id: "4", date: "August 11 at 20:00 PM", type: "lamp-on" },
-    { id: "5", date: "August 11 at 22:00 PM", type: "fan-off" },
-    { id: "6", date: "August 10 at 14:00 PM", type: "motion" },
-    { id: "7", date: "August 9 at 12:00 PM", type: "schedule" },
-    { id: "8", date: "August 8 at 11:00 PM", type: "automatic" },
-    { id: "9", date: "August 7 at 14:00 PM", type: "lamp-off" },
-    { id: "10", date: "August 6 at 04:00 PM", type: "fan-on" },
-    { id: "11", date: "August 5 at 18:00 PM", type: "motion" },
-    { id: "12", date: "August 4 at 17:00 PM", type: "schedule" },
+  { id: "1", date: "August 13 at 15:00 PM", type: "motion" },
+  { id: "2", date: "August 13 at 10:00 PM", type: "schedule" },
+  { id: "3", date: "August 12 at 15:00 PM", type: "automatic" },
+  { id: "4", date: "August 11 at 20:00 PM", type: "lamp-on" },
+  { id: "5", date: "August 11 at 22:00 PM", type: "fan-off" },
+  { id: "6", date: "August 10 at 14:00 PM", type: "motion" },
+  { id: "7", date: "August 9 at 12:00 PM", type: "schedule" },
+  { id: "8", date: "August 8 at 11:00 PM", type: "automatic" },
+  { id: "9", date: "August 7 at 14:00 PM", type: "lamp-off" },
+  { id: "10", date: "August 6 at 04:00 PM", type: "fan-on" },
+  { id: "11", date: "August 5 at 18:00 PM", type: "motion" },
+  { id: "12", date: "August 4 at 17:00 PM", type: "schedule" },
 ];
 
 const userName = "TimRisetCPS";
@@ -79,7 +79,7 @@ export default function NotificationsScreen() {
       activeOpacity={1}
       onPress={() => handleNotificationPress(data.item)}
     >
-      <View className="bg-primary rounded-xl p-5 flex-row items-center mb-3">
+      <View className="bg-primary rounded-xl p-3 flex-row items-center mb-3">
         <Ionicons
           name="warning-outline"
           size={24}
@@ -102,7 +102,7 @@ export default function NotificationsScreen() {
   const renderHiddenItem = (data: { item: LogEntry }) => (
     <View className="items-center flex-1 flex-row justify-end mb-3">
       <TouchableOpacity
-        className="bg-redDot justify-center items-center absolute top-0 bottom-0 right-0 w-20 rounded-xl"
+        className="bg-redDot justify-center items-center absolute top-0 bottom-4 right-0 w-20 rounded-xl"
         onPress={() => handleDeleteNotification(data.item.id)}
       >
         <Ionicons name="trash-outline" size={28} color={Colors.white} />
@@ -112,15 +112,18 @@ export default function NotificationsScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className="flex-1 bg-background" edges={["top", "left", "right"]}>
+      <SafeAreaView
+        className="flex-1 bg-background"
+        edges={["top", "left", "right"]}
+      >
         <View className="px-5 pt-[50px] mb-5">
           <Text className="font-poppins-regular text-[17px] text-text mt-2.5">
             Activity Log
           </Text>
           <Text
-            className="font-roboto-medium text-2xl text-text mt-0.5"
+            className="font-roboto-medium text-3xl text-text mt-0.5"
             style={{
-              textShadowColor: "rgba(0, 0, 0, 0.20)",
+              textShadowColor: "rgba(0, 0, 0, 0.1)",
               textShadowOffset: { width: 0, height: 1 },
               textShadowRadius: 6,
             }}

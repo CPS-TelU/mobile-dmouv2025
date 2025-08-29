@@ -228,7 +228,7 @@ export default function HistoryScreen() {
         style={{ paddingTop: insets.top }}
       >
         <Text
-          className="font-poppins-medium text-3xl text-text mt-16 mb-4"
+          className="font-poppins-medium text-3xl text-text mt-20 mb-6"
           style={{
             textShadowColor: "rgba(0, 0, 0, 0.25)",
             textShadowOffset: { width: 1, height: 2 },
@@ -240,7 +240,7 @@ export default function HistoryScreen() {
         <View className="flex-row items-center bg-white rounded-2xl px-4 h-14 shadow-md shadow-black/10">
           <Ionicons name="search-outline" size={22} color={Colors.textLight} />
           <TextInput
-            className="flex-1 font-roboto-regular h-12 text-base text-text ml-2.5"
+            className="flex-1 font-roboto-regular h-12 text-lg text-text ml-2.5"
             style={{ lineHeight: 20 }}
             placeholder="Search activity..."
             placeholderTextColor={Colors.textLight}
@@ -262,7 +262,7 @@ export default function HistoryScreen() {
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: 20,
-          paddingTop: 20,
+          paddingTop: 10,
           paddingBottom: 100,
         }}
       >
@@ -273,7 +273,7 @@ export default function HistoryScreen() {
                 key={index}
                 className="bg-white rounded-2xl p-4 mb-5 shadow-lg shadow-black/10"
               >
-                <Text className="font-poppins-bold text-base text-text mb-4 px-1">
+                <Text className="font-poppins-bold text-lg text-text mb-4 px-1">
                   {day.date}
                 </Text>
                 {day.logs.map((log, logIndex) => (
