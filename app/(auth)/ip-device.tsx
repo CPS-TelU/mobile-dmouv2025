@@ -52,7 +52,7 @@ export default function IpDeviceScreen() {
       return;
     }
     console.log("Connecting with:", { ipAddress, ssid, password });
-    router.push("/(auth)/login");
+    router.push("/(tabs)/home");
   };
 
   return (

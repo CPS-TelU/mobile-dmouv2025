@@ -77,7 +77,12 @@ export default function LoginScreen() {
       if (user) {
         await storeUserSession(user.token, user.role);
         console.log(`Login successful as: ${user.role}`);
-        router.replace("/(tabs)/home");
+
+        if (user.email.toLowerCase() === "superuser@gmail.com") {
+          router.replace("/(auth)/ip-device"); // superuser ke ip-device dulu
+        } else {
+          router.replace("/(tabs)/home"); // user langsung ke home
+        }
       } else {
         setLoginError("Invalid email or password. Please try again.");
       }

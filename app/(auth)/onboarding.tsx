@@ -117,7 +117,7 @@ export default function OnboardingScreen() {
   const navigateToNextScreen = async () => {
     try {
       await AsyncStorage.setItem("onboardingComplete", "true");
-      router.push("/(auth)/ip-device");
+      router.push("/(auth)/login");
     } catch (e) {
       console.error("Failed to save onboarding status.", e);
     }
